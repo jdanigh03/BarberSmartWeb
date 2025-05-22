@@ -1,0 +1,158 @@
+/* === Estilos Generales para Altura Completa === */
+html {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f6f9; /* Fondo general claro para la aplicación */
+    color: #333;
+    height: 100%;
+    display: flex;
+}
+
+#root { /* El div raíz donde se monta la aplicación React */
+    display: flex;
+    width: 100%;
+    height: 100%;
+}
+
+.aplicacion-contenedor {
+    display: flex; /* Para layout de sidebar y contenido principal */
+    width: 100%;
+    height: 100%;
+}
+
+/* === Estilos Actualizados de la Barra Lateral (Dashboard Sidebar) === */
+.sidebar-navegacion {
+    width: 260px; /* Ancho de la barra lateral */
+    background-color: #1A2533; /* Azul muy oscuro / Carbón */
+    color: #FFFFFF; /* Texto blanco por defecto para el sidebar */
+    display: flex;
+    flex-direction: column;
+    height: 100%; /* Ocupa toda la altura de .aplicacion-contenedor */
+    overflow-y: auto; /* Scroll si el contenido excede la altura */
+    flex-shrink: 0; /* Evita que la barra lateral se encoja */
+    padding: 0;
+}
+
+/* Eliminado: .sidebar-titulo-sismel y .sidebar-logo-empresa */
+/* Se asume que el logo y el texto "SISMEL" no existirán más en el sidebar. */
+
+/* === Estilos para la sección de usuario (Foto y Nombre "admin") === */
+.sidebar-usuario-perfil { /* Nuevo contenedor para la foto y nombre */
+    padding: 30px 20px 20px; /* Espacio superior, lateral e inferior */
+    text-align: center; /* Centrar el contenido */
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1); /* Línea divisoria */
+    margin-bottom: 10px; /* Espacio antes del menú */
+}
+
+.sidebar-usuario-perfil .usuario-avatar {
+    margin: 0 auto 15px; /* Centrar horizontalmente, espacio inferior */
+    width: 100px; /* Tamaño del contenedor del avatar */
+    height: 100px;
+    border-radius: 50%; /* Circular */
+    overflow: hidden; /* Asegura que la imagen circular no se desborde */
+    border: 3px solid #0D6EFD; /* Borde azul vibrante */
+    display: flex; /* Para centrar el contenido (icono o img) */
+    justify-content: center;
+    align-items: center;
+    background-color: #334257; /* Fondo si no hay imagen */
+}
+
+.sidebar-usuario-perfil .usuario-avatar .foto-perfil { /* Estilo para la imagen real */
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* Ajustar imagen para cubrir el área */
+    display: block; /* Elimina espacio extra debajo de la imagen */
+}
+
+.sidebar-usuario-perfil .usuario-avatar .icono-avatar-admin { /* Estilo si se usa el icono */
+    font-size: 5em; /* Tamaño grande para el icono */
+    color: #E0E0E0; /* Color del icono */
+}
+
+.sidebar-usuario-perfil .usuario-nombre-admin {
+    display: block; /* Asegura que ocupe su propia línea */
+    font-size: 1.3em; /* Tamaño de fuente para "admin" */
+    font-weight: 600; /* Un poco más de grosor */
+    color: #FFFFFF; /* Texto blanco */
+    margin-top: 10px; /* Espacio entre el avatar y el nombre */
+}
+
+/* El icono de dropdown, si se mantiene, se estilizaría dentro de .sidebar-usuario-perfil */
+/* .sidebar-usuario-perfil .icono-dropdown-admin {
+    color: #E0E0E0;
+    margin-left: 5px;
+    font-size: 0.8em;
+} */
+
+
+.sidebar-menu .menu-lista {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.sidebar-menu .menu-item {
+    margin: 0;
+}
+
+.sidebar-menu .menu-enlace {
+    display: flex; /* Usar flexbox para alinear icono y texto */
+    align-items: center; /* Centrar verticalmente */
+    padding: 18px 25px; /* Padding generoso */
+    color: #E0E0E0; /* Texto de enlaces */
+    text-decoration: none;
+    font-size: 1em;
+    transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out;
+}
+
+.sidebar-menu .menu-enlace .menu-icono { /* Estilo general para todos los iconos del menú */
+    font-size: 1.1em;
+    margin-right: 15px; /* Espacio entre icono y texto */
+    color: #B0B0B0; /* Color de los iconos por defecto */
+}
+
+.sidebar-menu .menu-enlace:hover {
+    background-color: #253344; /* Azul oscuro más claro para hover */
+    color: #FFFFFF;
+}
+
+.sidebar-menu .menu-enlace.active {
+    background-color: #0D6EFD; /* Azul brillante para el activo */
+    color: #FFFFFF; /* Texto blanco para el activo */
+    font-weight: 500; /* Ligeramente más grueso el texto activo */
+}
+
+.sidebar-menu .menu-enlace.active .menu-icono {
+    color: #FFFFFF; /* Icono blanco cuando el enlace está activo */
+}
+
+
+/* === Estilos del Contenido Principal (Genéricos) === */
+.contenido-principal {
+    flex-grow: 1; /* Ocupa el resto del espacio disponible */
+    padding: 25px;
+    background-color: #ffffff; /* Fondo blanco para el área de contenido */
+    overflow-y: auto; /* Scroll si el contenido es muy largo */
+    height: 100%; /* Asegura que el scroll sea interno si es necesario */
+    box-sizing: border-box;
+}
+
+/* Cabecera general dentro del contenido principal */
+.cabecera-contenido {
+    display: flex;
+    justify-content: space-between; /* Logo a la izq, otras acciones a la der */
+    align-items: center;
+    margin-bottom: 25px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid #dee2e6; /* Línea divisora sutil */
+}
+
+/* Eliminado: .cabecera-logo-principal .texto-logo-sismel */
+/* Se asume que no habrá un logo "SISMEL" en la cabecera principal. */

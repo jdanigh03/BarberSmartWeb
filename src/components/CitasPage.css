@@ -1,0 +1,101 @@
+/* === CitasPage.css === */
+
+.citas-page-container {
+    padding: 30px;
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    margin: 20px; /* Margen para que no toque los bordes del contenido principal */
+}
+
+.citas-page-title {
+    font-size: 2.2em;
+    color: #2c3e50;
+    margin-bottom: 25px;
+    border-bottom: 2px solid #e0e0e0;
+    padding-bottom: 10px;
+}
+
+.citas-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 25px;
+    flex-wrap: wrap; /* Para que los elementos se envuelvan en pantallas pequeñas */
+    gap: 15px; /* Espacio entre los elementos */
+}
+
+.citas-add-button {
+    background-color: #28a745; /* Verde */
+    color: white;
+    border: none;
+    padding: 12px 25px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1em;
+    transition: background-color 0.3s ease;
+}
+
+.citas-add-button:hover {
+    background-color: #218838;
+}
+
+.citas-search-input {
+    padding: 10px 15px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    width: 250px; /* Ancho fijo para la búsqueda */
+    font-size: 1em;
+}
+
+.citas-table-wrapper {
+    overflow-x: auto; /* Permite scroll horizontal en tablas grandes */
+}
+
+.citas-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    font-size: 0.95em;
+}
+
+.citas-table th,
+.citas-table td {
+    border: 1px solid #e0e0e0;
+    padding: 12px 15px;
+    text-align: left;
+}
+
+.citas-table th {
+    background-color: #f8f8f8;
+    color: #333;
+    font-weight: 600;
+}
+
+.citas-table tbody tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+.citas-table tbody tr:hover {
+    background-color: #f1f1f1;
+}
+
+.citas-action-button {
+    background-color: #007bff; /* Azul por defecto */
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.85em;
+    margin-right: 5px;
+    transition: background-color 0.3s ease;
+}
+
+.citas-action-button.view { background-color: #17a2b8; } /* Azul cian */
+.citas-action-button.edit { background-color: #ffc107; color: #333; } /* Amarillo */
+.citas-action-button.delete { background-color: #dc3545; } /* Rojo */
+
+.citas-action-button:hover {
+    opacity: 0.9;
+}
