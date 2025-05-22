@@ -1,0 +1,81 @@
+.login-page {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  background-color: var(--color-background);
+  padding: 20px;
+}
+
+.login-container {
+  background-color: var(--color-surface);
+  padding: 40px;
+  border-radius: 8px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 400px;
+  text-align: center;
+}
+
+.login-logo-container {
+    background-color: var(--logo-background); /* Fondo del logo como en el screenshot */
+    padding: 20px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    display: inline-block; /* Para que se ajuste al contenido */
+}
+
+.login-logo {
+  max-width: 150px; /* Ajusta el tamaño */
+  margin-bottom: 10px;
+}
+
+.login-container h1 {
+  color: var(--color-primary);
+  margin-bottom: 5px;
+  font-size: 1.8em;
+}
+
+.login-container p {
+    color: var(--color-text-secondary);
+    margin-bottom: 25px;
+    font-size: 1.1em;
+}
+
+.login-form .form-group {
+  margin-bottom: 20px;
+  text-align: left;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 8px;
+  color: var(--color-text-secondary);
+  font-weight: 500;
+}
+
+.form-group input {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid var(--color-border);
+  border-radius: 6px;
+  box-sizing: border-box;
+  font-size: 1em;
+}
+
+.login-button {
+  width: 100%;
+  padding: 12px;
+  background-color: var(--color-primary);
+  color: var(--color-text-on-primary);
+  border: none;
+  border-radius: 6px;
+  font-size: 1.1em;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.login-button:hover {
+  background-color: var(--color-primary-hover);
+}

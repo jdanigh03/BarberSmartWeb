@@ -1,0 +1,11 @@
+.admin-layout {
+  display: flex;
+  min-height: 100vh;
+}
+
+.admin-content {
+  flex-grow: 1;
+  padding: 25px;
+  background-color: var(--color-background);
+  overflow-y: auto; /* Para scroll si el contenido es largo */
+}

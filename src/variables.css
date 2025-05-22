@@ -1,0 +1,12 @@
+:root {
+  --color-background: #FAF0E6; /* Beige claro para el fondo */
+  --color-surface: #FFFFFF;    /* Blanco para superficies como cards o inputs */
+  --color-primary: #3D3D3D;  /* Gris oscuro para texto principal y botones */
+  --color-primary-hover: #2A2A2A; /* Un poco más oscuro para hover de botones */
+  --color-text-on-primary: #FFFFFF; /* Texto blanco sobre botones oscuros */
+  --color-text-primary: #3D3D3D;  /* Texto principal oscuro */
+  --color-text-secondary: #555555; /* Texto secundario un poco más claro */
+  --color-border: #E0E0E0;      /* Color para bordes sutiles */
+  --font-family-main: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  --logo-background: #F5F5DC; /* Fondo específico para el logo, si es diferente */
+}
