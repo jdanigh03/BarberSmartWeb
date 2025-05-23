@@ -7,6 +7,7 @@ import BarbersPage from './pages/BarbersPage';
 import UsersPage from './pages/UsersPage';
 import AppointmentsPage from './pages/AppointmentsPage';
 import PaymentsPage from './pages/PaymentsPage';
+import Registrarse from './pages/Registrarse';
 // Importar App.css si es que tienes estilos globales específicos para App, si no, puedes quitarlo
 // import './App.css';
 
@@ -47,6 +48,7 @@ function App() {
         <Route path="/" element={<Navigate to="/login" replace />} />
         {/* Puedes agregar una página 404 aquí si lo deseas */}
         <Route path="*" element={<div><h1>404 - Página No Encontrada</h1><p><a href="/login">Ir a Login</a></p></div>} />
+        <Route path="/registrarse" element={<Registrarse />} />
       </Routes>
     </Router>
   );

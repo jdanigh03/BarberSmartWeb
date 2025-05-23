@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import logo from '../assets/logo.png'; // Ajusta la ruta si es necesario
+import logo from '../assets/barbersmart video.mp4';
 import './LoginPage.css';
 
 const LoginPage = () => {
@@ -12,16 +12,26 @@ const LoginPage = () => {
     e.preventDefault();
     // Aquí iría la lógica de autenticación
     console.log('Email:', email, 'Password:', password);
-    // Simulación de login exitoso
     alert('Inicio de sesión simulado exitoso!');
-    navigate('/admin/dashboard'); // Redirige al dashboard después del login
+    navigate('/admin/dashboard');
+  };
+
+  const handleRegisterClick = () => {
+    navigate('/registrarse'); // Ruta de tu página de registro
   };
 
   return (
     <div className="login-page">
       <div className="login-container">
         <div className="login-logo-container">
-          <img src={logo} alt="BarberSmart Logo" className="login-logo" />
+          <video 
+            src={logo} 
+            className="login-logo" 
+            autoPlay 
+            loop 
+            muted 
+            playsInline
+          />
         </div>
         <h1>Acceso Administrador</h1>
         <p>BarberSmart</p>
@@ -48,6 +58,11 @@ const LoginPage = () => {
           </div>
           <button type="submit" className="login-button">Ingresar</button>
         </form>
+
+        {/* Botón para ir al registro */}
+        <button onClick={handleRegisterClick} className="register-link">
+          ¿No tienes cuenta? Registrarse
+        </button>
       </div>
     </div>
   );
