@@ -5,10 +5,11 @@ import logo from '../assets/barbersmart video.mp4';
 import './Registrarse.css'; // reutilizamos el mismo CSS base
 
 const Registrarse = () => {
-  const [nombre, setNombre] = useState('');
+  const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [telefono, setTelefono] = useState('');
-  const [rol, setRol] = useState('Cliente');
+  // MODIFICACIÓN CLAVE: Rol asignado directamente a 'Administrador'
+  const [rol, setRol] = useState('Administrador'); 
   const [password, setPassword] = useState('');
   const [confirmarPassword, setConfirmarPassword] = useState('');
   const navigate = useNavigate();
@@ -22,12 +23,16 @@ const Registrarse = () => {
 
     try {
       const response = await axios.post('http://localhost:3001/api/register', {
-        name, email, telefono, rol, password
+        name,
+        email,
+        telefono,
+        rol, // El rol siempre será 'Administrador'
+        password,
       });
 
       if (response.data.success) {
-        alert('¡Registro exitoso!');
-        navigate('/admin/dashboard');
+        alert('¡Registro exitoso como Administrador!'); // Mensaje más específico
+        navigate('/admin/dashboard'); // Redirigir al dashboard de admin
       } else {
         alert(response.data.message || 'Error al registrar');
       }
@@ -41,27 +46,26 @@ const Registrarse = () => {
     <div className="register-page">
       <div className="register-container">
         <div className="login-logo-container">
-          <video 
-            src={logo} 
-            className="login-logo" 
-            autoPlay 
-            loop 
-            muted 
+          <video
+            src={logo}
+            className="login-logo"
+            autoPlay
+            loop
+            muted
             playsInline
           />
         </div>
-        <h1>Registro de Administrador</h1>
+        <h1>Registro de Administrador</h1> {/* Título modificado */}
         <p>BarberSmart</p>
         <form onSubmit={handleSubmit} className="login-form">
-
           <div className="form-row">
             <div className="form-group half-width">
-              <label htmlFor="nombre">Nombre Completo</label>
+              <label htmlFor="name">Nombre Completo</label>
               <input
                 type="text"
-                id="nombre"
-                value={nombre}
-                onChange={(e) => setNombre(e.target.value)}
+                id="name"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
                 required
               />
             </div>
@@ -88,7 +92,8 @@ const Registrarse = () => {
                 required
               />
             </div>
-            <div className="form-group half-width">
+            {/* ELIMINADO: El selector de rol ya no es necesario */}
+            {/* <div className="form-group half-width">
               <label htmlFor="rol">Rol</label>
               <select
                 id="rol"
@@ -100,6 +105,17 @@ const Registrarse = () => {
                 <option value="Barbero">Barbero</option>
                 <option value="Administrador">Administrador</option>
               </select>
+            </div> */}
+            {/* Opcional: Si quieres mostrar el rol actual, puedes usar un input de solo lectura o un párrafo */}
+            <div className="form-group half-width">
+              <label htmlFor="rol">Rol Asignado</label>
+              <input
+                type="text"
+                id="rol"
+                value={rol} // Mostrar el valor del estado 'rol'
+                readOnly // Hacerlo de solo lectura
+                className="read-only-input" // Puedes añadir una clase CSS para estilizarlo
+              />
             </div>
           </div>
 
@@ -126,7 +142,9 @@ const Registrarse = () => {
             </div>
           </div>
 
-          <button type="submit" className="register-button">Registrarse</button>
+          <button type="submit" className="register-button">
+            Registrarse
+          </button>
         </form>
       </div>
     </div>
