@@ -1,0 +1,240 @@
+.barber-list {
+  margin-top: 20px;
+  border: 1px solid var(--color-border);
+  padding: 15px;
+  border-radius: 8px;
+  background-color: var(--color-surface);
+}
+
+.barber-card {
+  margin-bottom: 15px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #eee;
+}
+
+.form-edit input {
+  margin: 5px;
+  padding: 8px;
+  width: 25%;
+}
+
+.btn-group {
+  margin-top: 10px;
+}
+
+.btn-editar {
+  background-color: #007bff;
+  color: white;
+  padding: 8px 14px;
+  border: none;
+  border-radius: 6px;
+  margin-right: 10px;
+  cursor: pointer;
+}
+
+.btn-editar:hover {
+  background-color: #0056b3;
+}
+
+.btn-eliminar {
+  background-color: #dc3545;
+  color: white;
+  padding: 8px 14px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.btn-eliminar:hover {
+  background-color: #b52a37;
+}
+
+.btn-guardar {
+  background-color: #28a745;
+  color: white;
+  padding: 8px 14px;
+  border: none;
+  border-radius: 6px;
+  margin-left: 10px;
+  cursor: pointer;
+}
+
+.btn-guardar:hover {
+  background-color: #1e7e34;
+}
+
+.barber-card {
+  background-color: #fff;
+  border: 1px solid #e0e0e0;
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 20px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+  transition: transform 0.2s ease;
+}
+
+.barber-card:hover {
+  transform: translateY(-2px);
+}
+
+.barber-name {
+  margin-bottom: 15px;
+  font-size: 1.4em;
+  color: #333;
+  font-weight: bold;
+}
+
+.barber-detail {
+  margin: 8px 0;
+  font-size: 1em;
+  color: #444;
+}
+
+.barber-actions {
+  margin-top: 15px;
+  display: flex;
+  gap: 10px;
+}
+
+.barber-form input {
+  display: block;
+  margin: 8px 0;
+  padding: 10px;
+  width: 100%;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+}
+
+.btn-editar, .btn-eliminar, .btn-guardar {
+  padding: 10px 16px;
+  border: none;
+  border-radius: 6px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.btn-editar {
+  background-color: #007bff;
+  color: white;
+}
+
+.btn-editar:hover {
+  background-color: #0056b3;
+}
+
+.btn-eliminar {
+  background-color: #dc3545;
+  color: white;
+}
+
+.btn-eliminar:hover {
+  background-color: #b52a37;
+}
+
+.btn-guardar {
+  background-color: #28a745;
+  color: white;
+}
+
+.btn-guardar:hover {
+  background-color: #1e7e34;
+}
+
+/* Contenedor principal de tarjetas en grid */
+.barber-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 20px;
+  margin-top: 20px;
+  padding: 10px;
+}
+
+/* Tarjeta individual */
+.barber-card {
+  background-color: white;
+  border: 1px solid #e0e0e0;
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.06);
+  transition: transform 0.2s ease;
+}
+
+.barber-card:hover {
+  transform: translateY(-2px);
+}
+
+/* Nombre del barbero */
+.barber-name {
+  font-size: 1.4em;
+  font-weight: bold;
+  margin-bottom: 15px;
+  color: #333;
+}
+
+/* Detalles */
+.barber-detail {
+  margin: 8px 0;
+  font-size: 1em;
+  color: #444;
+}
+
+.barber-detail em {
+  color: #999;
+  font-style: italic;
+}
+
+/* Botones */
+.barber-actions {
+  margin-top: 15px;
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.barber-form input {
+  display: block;
+  margin: 8px 0;
+  padding: 10px;
+  width: 100%;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+}
+
+.btn-editar,
+.btn-eliminar,
+.btn-guardar {
+  padding: 10px 16px;
+  border: none;
+  border-radius: 6px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.btn-editar {
+  background-color: #007bff;
+  color: white;
+}
+
+.btn-editar:hover {
+  background-color: #0056b3;
+}
+
+.btn-eliminar {
+  background-color: #dc3545;
+  color: white;
+}
+
+.btn-eliminar:hover {
+  background-color: #b52a37;
+}
+
+.btn-guardar {
+  background-color: #28a745;
+  color: white;
+}
+
+.btn-guardar:hover {
+  background-color: #1e7e34;
+}

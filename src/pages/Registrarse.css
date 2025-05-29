@@ -1,0 +1,107 @@
+/* Fondo general de la página */
+.register-page {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  background-color: var(--color-background);
+  padding: 20px;
+}
+
+/* Contenedor principal del formulario */
+.register-container {
+  background-color: var(--color-surface);
+  padding: 40px;
+  border-radius: 8px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 600px;
+  text-align: center;
+}
+
+/* Logo de la app */
+.register-logo-container {
+  padding: 20px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  display: inline-block;
+}
+
+.register-logo {
+  max-width: 250px;
+  margin-bottom: 10px;
+}
+
+/* Título y subtítulo */
+.register-container h1 {
+  color: var(--color-primary);
+  margin-bottom: 5px;
+  font-size: 1.8em;
+}
+
+.register-container p {
+  color: var(--color-text-secondary);
+  margin-bottom: 25px;
+  font-size: 1.1em;
+}
+
+/* Estructura de filas dobles */
+.form-row {
+  display: flex;
+  gap: 16px;
+  justify-content: space-between;
+  flex-wrap: wrap;
+}
+
+.form-group {
+  margin-bottom: 20px;
+  text-align: left;
+  flex: 1;
+}
+
+/* Inputs y select */
+.form-group input,
+.form-group select {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid var(--color-border);
+  border-radius: 6px;
+  box-sizing: border-box;
+  font-size: 1em;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 8px;
+  color: var(--color-text-secondary);
+  font-weight: 500;
+}
+
+/* Ancho adaptable para columnas */
+.half-width {
+  width: 100%;
+}
+
+@media (min-width: 600px) {
+  .half-width {
+    width: 48%;
+  }
+}
+
+/* Botón de enviar */
+.register-button {
+  width: 100%;
+  padding: 12px;
+  background-color: var(--color-primary);
+  color: var(--color-text-on-primary);
+  border: none;
+  border-radius: 6px;
+  font-size: 1.1em;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.register-button:hover {
+  background-color: var(--color-primary-hover);
+}

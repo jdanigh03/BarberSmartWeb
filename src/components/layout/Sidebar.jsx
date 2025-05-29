@@ -1,9 +1,18 @@
 import React from 'react';
-import { NavLink } from 'react-router-dom';
-import logo from '../../assets/logo.png'; // Asegúrate que esta ruta sea correcta
+import { NavLink, useNavigate } from 'react-router-dom';
+import logo from '../../assets/logo.png';
 import './Sidebar.css';
 
 const Sidebar = () => {
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    // Limpia datos del usuario (ajústalo según lo que guardes)
+    localStorage.removeItem('user');  // o 'token', si usas autenticación
+    sessionStorage.clear();           // opcional: limpia todo
+    navigate('/');                    // Redirige al login
+  };
+
   return (
     <aside className="sidebar">
       <div className="sidebar-header">
@@ -28,8 +37,8 @@ const Sidebar = () => {
         </NavLink>
       </nav>
       <div className="sidebar-footer">
-        <button onClick={() => alert('Cerrar sesión... (lógica pendiente)')} className="logout-button">
-            Cerrar Sesión
+        <button onClick={handleLogout} className="logout-button">
+          Cerrar Sesión
         </button>
       </div>
     </aside>

@@ -9,9 +9,8 @@ const AppointmentsPage = () => {
   return (
     <div>
       <h1>Gestión de Citas</h1>
-      <p>Visualiza y administra todas las citas programadas.</p>
       <div style={{ marginTop: '20px', border: '1px solid var(--color-border)', padding: '15px', borderRadius: '8px', backgroundColor: 'var(--color-surface)' }}>
-        <h2>Listado de Citas (Ejemplo)</h2>
+        <h2>Listado de Citas</h2>
         {dummyAppointments.map(apt => (
           <div key={apt.id} style={{ marginBottom: '10px', paddingBottom: '10px', borderBottom: '1px solid #eee' }}>
             <strong>{apt.service}</strong> - {apt.status}
