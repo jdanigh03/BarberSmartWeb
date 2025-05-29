@@ -22,7 +22,7 @@ const Registrarse = () => {
 
     try {
       const response = await axios.post('http://localhost:3001/api/register', {
-        nombre, email, telefono, rol, password
+        name, email, telefono, rol, password
       });
 
       if (response.data.success) {
