@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import './BarbersPage.css'; // Asegúrate de tener este archivo
+import './BarbersPage.css';
 
 const BarbersPage = () => {
   const [barberos, setBarberos] = useState([]);
@@ -8,7 +8,8 @@ const BarbersPage = () => {
   const [formData, setFormData] = useState({
     especialidad: '',
     descripcion_profesional: '',
-    calificacion_promedio: ''
+    calificacion_promedio: '',
+    barberia_id: ''
   });
 
   useEffect(() => {
@@ -18,8 +19,8 @@ const BarbersPage = () => {
   const fetchBarberos = async () => {
     const res = await axios.get('http://localhost:3001/api/barberos');
     if (res.data.success) {
-      console.log(res.data.barberos);
-      setBarberos(res.data.barberos);
+      const barberosFiltrados = res.data.barberos.filter(barber => barber.rol === 'Barbero');
+      setBarberos(barberosFiltrados);
     }
   };
 
@@ -28,7 +29,8 @@ const BarbersPage = () => {
     setFormData({
       especialidad: barbero.especialidad || '',
       descripcion_profesional: barbero.descripcion_profesional || '',
-      calificacion_promedio: barbero.calificacion_promedio || ''
+      calificacion_promedio: barbero.calificacion_promedio || '',
+      barberia_id: barbero.barberia_id || ''
     });
   };
 
@@ -63,7 +65,7 @@ const BarbersPage = () => {
       <div className="barber-list">
         {barberos.map(barber => (
           <div key={barber.usuario_id} className="barber-card">
-            <h3 className="barber-name">{barber.nombre}</h3>
+            <h3 className="barber-name">{barber.name}</h3>
 
             <div className="barber-detail">
               <strong>Especialidad:</strong> {barber.especialidad || <em>No definida</em>}
@@ -75,6 +77,10 @@ const BarbersPage = () => {
 
             <div className="barber-detail">
               <strong>Calificación:</strong> {barber.calificacion_promedio || <em>No registrada</em>}
+            </div>
+
+            <div className="barber-detail">
+              <strong>Barbería ID:</strong> {barber.barberia_id || <em>No asignada</em>}
             </div>
 
             {editando === barber.usuario_id ? (
@@ -94,6 +100,12 @@ const BarbersPage = () => {
                   placeholder="Calificación"
                   value={formData.calificacion_promedio}
                   onChange={(e) => setFormData({ ...formData, calificacion_promedio: e.target.value })}
+                />
+                <input
+                  type="number"
+                  placeholder="Barbería ID"
+                  value={formData.barberia_id}
+                  onChange={(e) => setFormData({ ...formData, barberia_id: e.target.value })}
                 />
                 <button className="btn-guardar" onClick={() => handleSave(barber.usuario_id)}>Guardar</button>
               </div>
