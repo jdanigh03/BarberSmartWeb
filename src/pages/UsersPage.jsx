@@ -42,7 +42,7 @@ const UsersPage = () => {
   return (
     <div>
       <h1>Gestión de Clientes</h1>
-      <p>Aquí podrás ver la información de los **clientes** registrados en BarberSmart.</p>
+      <p>Aquí podrás ver la información de los Clientes registrados en BarberSmart.</p>
       <div style={{ marginTop: '20px', border: '1px solid var(--color-border)', padding: '15px', borderRadius: '8px', backgroundColor: 'var(--color-surface)' }}>
         <h2>Listado de Clientes</h2>
         {loading ? (

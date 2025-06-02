@@ -8,8 +8,8 @@ import UsersPage from './pages/UsersPage';
 import AppointmentsPage from './pages/AppointmentsPage';
 import PaymentsPage from './pages/PaymentsPage';
 import Registrarse from './pages/Registrarse';
-// Importar App.css si es que tienes estilos globales específicos para App, si no, puedes quitarlo
-// import './App.css';
+// Importa el nuevo componente para citas de usuario
+import UserAppointmentsPage from './pages/UserAppointmentsPage'; // <-- ¡Asegúrate de que esta ruta sea correcta!
 
 // Un componente simple para rutas protegidas (simulado por ahora)
 const ProtectedRoute = ({ children }) => {
@@ -41,6 +41,8 @@ function App() {
           <Route path="users" element={<UsersPage />} />
           <Route path="appointments" element={<AppointmentsPage />} />
           <Route path="payments" element={<PaymentsPage />} />
+          {/* NUEVA RUTA: Para citas de un usuario específico dentro del AdminLayout */}
+          <Route path="appointments/:userId" element={<UserAppointmentsPage />} /> {/* <-- Añadida aquí */}
           {/* Redirección por defecto para /admin a /admin/dashboard */}
           <Route index element={<Navigate to="dashboard" replace />} />
         </Route>
