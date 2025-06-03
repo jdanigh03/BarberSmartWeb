@@ -1,0 +1,179 @@
+/* src/pages/PaymentsPage.css */
+
+.payments-page-container {
+  padding: 25px;
+  max-width: 100%; /* Ocupa el ancho disponible dentro de AdminLayout */
+  margin: 0 auto;
+  font-family: var(--font-family-main, Arial, sans-serif); /* Usa tus variables globales si las tienes */
+}
+
+.payments-header {
+  margin-bottom: 30px;
+  padding-bottom: 15px;
+  border-bottom: 1px solid var(--color-border, #e0e0e0);
+}
+
+.payments-header h1 {
+  color: var(--color-primary, #333);
+  font-size: 2em;
+  margin-bottom: 8px;
+}
+
+.payments-header p {
+  color: var(--color-text-secondary, #555);
+  font-size: 1.1em;
+}
+
+.filters-container {
+  display: flex;
+  gap: 15px;
+  margin-bottom: 25px;
+  align-items: center;
+}
+
+.search-input, .status-filter {
+  padding: 10px 12px;
+  border: 1px solid var(--color-border, #ccc);
+  border-radius: 6px;
+  font-size: 1em;
+  background-color: var(--color-surface, #fff);
+  color: var(--color-text-primary, #333);
+}
+
+.search-input {
+  flex-grow: 1;
+}
+
+.status-filter {
+  min-width: 180px;
+}
+
+.payments-list {
+  background-color: var(--color-surface, #fff);
+  padding: 25px;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.07);
+}
+
+.payments-list h2 {
+  font-size: 1.5em;
+  color: var(--color-primary, #333);
+  margin-bottom: 20px;
+}
+
+.loading-message,
+.error-message,
+.no-payments-message {
+  text-align: center;
+  padding: 40px 20px;
+  font-size: 1.1em;
+  color: var(--color-text-secondary, #555);
+  background-color: var(--color-surface, #fff);
+  border-radius: 8px;
+  border: 1px dashed var(--color-border, #ddd);
+}
+
+.error-message {
+  color: #dc3545; /* Rojo para errores */
+  border-color: #dc3545;
+  background-color: #f8d7da;
+}
+
+.payments-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 10px;
+}
+
+.payments-table th,
+.payments-table td {
+  padding: 12px 15px;
+  text-align: left;
+  border-bottom: 1px solid var(--color-border, #eee);
+  color: var(--color-text-primary, #333);
+}
+
+.payments-table th {
+  background-color: var(--color-background, #f9f9f9); /* Un fondo ligeramente diferente para encabezados */
+  font-weight: 600;
+  color: var(--color-primary, #333);
+  white-space: nowrap;
+}
+
+.payments-table tr:last-child td {
+  border-bottom: none;
+}
+
+.payments-table tr:hover {
+  background-color: #f5f5f525; /* Un sutil hover */
+}
+
+.payment-status-badge {
+  padding: 5px 10px;
+  border-radius: 15px;
+  font-size: 0.85em;
+  font-weight: bold;
+  color: #fff;
+  text-transform: capitalize;
+  white-space: nowrap;
+}
+
+.payment-status-paid {
+  background-color: #28a745; /* Verde */
+}
+
+.payment-status-pending {
+  background-color: #ffc107; /* Amarillo */
+  color: #333; /* Texto oscuro para mejor contraste con amarillo */
+}
+
+.payment-status-cancelled {
+  background-color: #dc3545; /* Rojo */
+}
+
+.payment-status-unknown {
+  background-color: #6c757d; /* Gris */
+}
+
+.services-cell {
+  max-width: 200px; /* Limita el ancho para que no se desborde con muchos servicios */
+  white-space: normal; /* Permite que el texto de los servicios se divida en múltiples líneas */
+}
+
+/* Media queries para responsividad si es necesario */
+@media (max-width: 768px) {
+  .filters-container {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .search-input, .status-filter {
+    width: 100%;
+  }
+  /* Para tablas en móvil, puedes considerar hacerlas "responsive" */
+  /* Esto es un ejemplo simple, hay técnicas más avanzadas */
+  .payments-table thead {
+    display: none; /* Oculta encabezados en móvil */
+  }
+  .payments-table td {
+    display: block;
+    text-align: right; /* Alinea el texto a la derecha */
+    padding-left: 50%; /* Deja espacio para la etiqueta "data-label" */
+    position: relative;
+    border-bottom: 1px dotted #ccc;
+  }
+  .payments-table td:last-child {
+      border-bottom: 2px solid var(--color-primary, #333); /* Borde más grueso para separar items */
+  }
+  .payments-table td::before {
+    content: attr(data-label); /* El contenido del pseudo-elemento es el valor del atributo */
+    position: absolute;
+    left: 10px;
+    width: calc(50% - 20px); /* Ancho de la etiqueta */
+    padding-right: 10px;
+    font-weight: bold;
+    text-align: left;
+    white-space: nowrap;
+  }
+  /* Necesitarías añadir el atributo data-label a cada td en el JSX */
+  /* Ej: <td data-label="ID Cita">#{payment.cita_id}</td> */
+}
