@@ -1,23 +1,57 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import logo from '../assets/barbersmart video.mp4';
-import './Registrarse.css'; // reutilizamos el mismo CSS base
+import './Registrarse.css';
+
+// Componente para el Modal de Mensaje
+const RegisterMessageModal = ({ message, type, onClose }) => {
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      onClose();
+    }, 3000); // Disappear after 3 seconds
+
+    return () => clearTimeout(timer);
+  }, [onClose]);
+
+  return (
+    <div className="register-modal-backdrop">
+      <div className={`register-message-modal register-modal-${type}`}>
+        <p>{message}</p>
+      </div>
+    </div>
+  );
+};
 
 const Registrarse = () => {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [telefono, setTelefono] = useState('');
-  // MODIFICACIÓN CLAVE: Rol asignado directamente a 'Administrador'
-  const [rol, setRol] = useState('Administrador'); 
+  const [rol, setRol] = useState('Administrador');
   const [password, setPassword] = useState('');
   const [confirmarPassword, setConfirmarPassword] = useState('');
+  const [showModal, setShowModal] = useState(false);
+  const [modalMessage, setModalMessage] = useState('');
+  const [modalType, setModalType] = useState('');
+
   const navigate = useNavigate();
+
+  const handleShowModal = (message, type) => {
+    setModalMessage(message);
+    setModalType(type);
+    setShowModal(true);
+  };
+
+  const handleCloseModal = () => {
+    setShowModal(false);
+    setModalMessage('');
+    setModalType('');
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (password !== confirmarPassword) {
-      alert('Las contraseñas no coinciden');
+      handleShowModal('Las contraseñas no coinciden', 'error');
       return;
     }
 
@@ -26,38 +60,45 @@ const Registrarse = () => {
         name,
         email,
         telefono,
-        rol, // El rol siempre será 'Administrador'
+        rol,
         password,
       });
 
       if (response.data.success) {
-        alert('¡Registro exitoso como Administrador!'); // Mensaje más específico
-        navigate('/admin/dashboard'); // Redirigir al dashboard de admin
+        handleShowModal('¡Registro exitoso como Administrador!', 'success');
+        setTimeout(() => {
+          navigate('/admin/dashboard');
+        }, 3500);
       } else {
-        alert(response.data.message || 'Error al registrar');
+        handleShowModal(response.data.message || 'Error al registrar', 'error');
       }
     } catch (error) {
       console.error(error);
-      alert('Error al registrar. Intente más tarde.');
+      handleShowModal('Error al registrar. Intente más tarde.', 'error');
     }
+  };
+
+  // New handler for navigating back to login
+  const handleLoginClick = () => {
+    navigate('/'); // Assuming '/' is your login page route
   };
 
   return (
     <div className="register-page">
       <div className="register-container">
-        <div className="login-logo-container">
+        <div className="register-logo-container">
           <video
             src={logo}
-            className="login-logo"
+            className="register-logo"
             autoPlay
             loop
             muted
             playsInline
           />
         </div>
-        <h1>Registro de Administrador</h1> {/* Título modificado */}
+        <h1>Registro de Administrador</h1>
         <p>BarberSmart</p>
-        <form onSubmit={handleSubmit} className="login-form">
+        <form onSubmit={handleSubmit} className="register-form">
           <div className="form-row">
             <div className="form-group half-width">
               <label htmlFor="name">Nombre Completo</label>
@@ -92,29 +133,14 @@ const Registrarse = () => {
                 required
               />
             </div>
-            {/* ELIMINADO: El selector de rol ya no es necesario */}
-            {/* <div className="form-group half-width">
-              <label htmlFor="rol">Rol</label>
-              <select
-                id="rol"
-                value={rol}
-                onChange={(e) => setRol(e.target.value)}
-                required
-              >
-                <option value="Cliente">Cliente</option>
-                <option value="Barbero">Barbero</option>
-                <option value="Administrador">Administrador</option>
-              </select>
-            </div> */}
-            {/* Opcional: Si quieres mostrar el rol actual, puedes usar un input de solo lectura o un párrafo */}
             <div className="form-group half-width">
               <label htmlFor="rol">Rol Asignado</label>
               <input
                 type="text"
                 id="rol"
-                value={rol} // Mostrar el valor del estado 'rol'
-                readOnly // Hacerlo de solo lectura
-                className="read-only-input" // Puedes añadir una clase CSS para estilizarlo
+                value={rol}
+                readOnly
+                className="read-only-input"
               />
             </div>
           </div>
@@ -146,7 +172,21 @@ const Registrarse = () => {
             Registrarse
           </button>
         </form>
+
+        {/* Nuevo botón para volver al login */}
+        <button onClick={handleLoginClick} className="register-login-link">
+          ¿Ya tienes cuenta? Iniciar Sesión
+        </button>
+
       </div>
+
+      {showModal && (
+        <RegisterMessageModal
+          message={modalMessage}
+          type={modalType}
+          onClose={handleCloseModal}
+        />
+      )}
     </div>
   );
 };
