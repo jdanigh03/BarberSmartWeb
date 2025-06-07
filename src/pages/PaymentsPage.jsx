@@ -114,7 +114,6 @@ const PaymentsPage = () => {
           <option value="todos">Todos los Estados</option>
           <option value="Pagado">Pagado</option>
           <option value="Pendiente">Pendiente</option>
-          <option value="Cancelado">Cancelado</option> {/* Si tienes este estado */}
         </select>
       </div>
 
@@ -147,7 +146,7 @@ const PaymentsPage = () => {
                   <td>{payment.barbero_nombre || 'N/A'}</td>
                   <td>{formatDate(payment.fecha_cita)} {payment.hora_cita || ''}</td>
                   <td className="services-cell">{payment.servicio_nombres ? payment.servicio_nombres.join(', ') : 'N/A'}</td>
-                  <td>${payment.monto_total ? parseFloat(payment.monto_total).toFixed(2) : '0.00'}</td>
+                  <td>{payment.monto_total ? parseFloat(payment.monto_total).toFixed(2) : '0.00'} Bs.</td>
                   <td>{payment.metodo_pago || 'N/A'}</td>
                   <td>
                     <span className={`payment-status-badge ${getStatusColor(payment.estado_pago)}`}>

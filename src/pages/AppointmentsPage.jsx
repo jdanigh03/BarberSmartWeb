@@ -224,7 +224,7 @@ const AppointmentsPage = () => {
   // Función auxiliar para formatear la fecha de manera segura
   const formatDate = (dateString) => {
     try {
-      const date = new Date(dateString);
+      // const date = new Date(dateString); //Aqui la declaramos pero no lo usa para na, porque  la lógica siguiente opera directamente con dateString para crear localDate.
       // Verificar si la fecha es válida. El getTime() en una fecha inválida devuelve NaN.
       // También, la fecha de la cita podría ser solo la parte de la fecha,
       // y new Date() puede interpretarla como UTC, ajustando al huso horario local.

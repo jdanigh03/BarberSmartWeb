@@ -27,7 +27,8 @@ const Registrarse = () => {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [telefono, setTelefono] = useState('');
-  const [rol, setRol] = useState('Administrador');
+  // const [rol, setRol] = useState('Administrador');
+  const rolFijo = 'Administrador';
   const [password, setPassword] = useState('');
   const [confirmarPassword, setConfirmarPassword] = useState('');
   const [showModal, setShowModal] = useState(false);
@@ -60,7 +61,8 @@ const Registrarse = () => {
         name,
         email,
         telefono,
-        rol,
+        // rol, antiguos
+        rol: rolFijo,
         password,
       });
 
@@ -138,7 +140,8 @@ const Registrarse = () => {
               <input
                 type="text"
                 id="rol"
-                value={rol}
+                // value={rol}
+                value={rolFijo}
                 readOnly
                 className="read-only-input"
               />
