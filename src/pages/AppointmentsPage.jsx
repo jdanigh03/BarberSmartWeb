@@ -1,87 +1,91 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import axios from 'axios';
-import './AppointmentsPage.css'; // ¡Importamos el archivo CSS aquí!
+import './AppointmentsPage.css';
+
+const ITEMS_PER_PAGE = 15;
 
 const AppointmentsPage = () => {
-  // Estados para datos y UI (sin cambios)
+  // Estados de datos
   const [allAppointments, setAllAppointments] = useState([]);
+  const [barbers, setBarbers] = useState([]);
+  
+  // Estados de UI
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [message, setMessage] = useState('');
   
-  // Estados para filtros (sin cambios)
+  // Estados para filtros
   const [searchTerm, setSearchTerm] = useState('');
-  const [barbers, setBarbers] = useState([]);
   const [selectedBarber, setSelectedBarber] = useState('');
 
-  // Estados para paginación (sin cambios)
-  const [pagination, setPagination] = useState({
-    page: 1,
-    limit: 15,
-    totalPages: 1,
-    total: 0,
-  });
+  // Estado para paginación
+  const [currentPage, setCurrentPage] = useState(1);
 
-  // --- LÓGICA DE DATOS (sin cambios) ---
-  const fetchBarbers = async () => {
-    try {
-      const response = await axios.get('http://localhost:3001/api/barberos');
-      if (response.data.success) setBarbers(response.data.barberos);
-    } catch (err) {
-      console.error("Error al cargar barberos:", err);
-    }
-  };
-
-  const fetchAllAppointments = useCallback(async () => {
-    setLoading(true);
-    setError(null);
-    setMessage('');
-    try {
-      const params = {
-        search: searchTerm,
-        barberId: selectedBarber,
-        page: pagination.page,
-        limit: pagination.limit,
-      };
-
-      const response = await axios.get('http://localhost:3001/api/appointments/all', { params });
-      
-      if (response.data.success) {
-        setAllAppointments(response.data.appointments || []);
-        setPagination(response.data.pagination);
-        if (response.data.appointments.length === 0) {
-          setMessage('No se encontraron citas con los filtros seleccionados.');
-        }
-      } else {
-        setError(response.data.message || 'Error al obtener las citas.');
-      }
-    } catch (err) {
-      setError('No se pudo conectar con el servidor.');
-    } finally {
-      setLoading(false);
-    }
-  }, [searchTerm, selectedBarber, pagination.page, pagination.limit]);
-
-  // --- EFECTOS (LIFECYCLE) (sin cambios) ---
+  // Carga de datos inicial
   useEffect(() => {
-    fetchBarbers();
+    const fetchInitialData = async () => {
+      setLoading(true);
+      try {
+        // Hacemos las dos llamadas en paralelo para mayor eficiencia
+        const [appointmentsResponse, barbersResponse] = await Promise.all([
+          axios.get('http://localhost:3001/api/appointments/all'),
+          axios.get('http://localhost:3001/api/barberos')
+        ]);
+
+        if (appointmentsResponse.data.success) {
+          setAllAppointments(appointmentsResponse.data.appointments || []);
+        } else {
+          setError(appointmentsResponse.data.message || 'Error al obtener las citas.');
+        }
+
+        if (barbersResponse.data.success) {
+          setBarbers(barbersResponse.data.barberos || []);
+        }
+
+      } catch (err) {
+        setError('No se pudo conectar con el servidor.');
+      } finally {
+        setLoading(false);
+      }
+    };
+    
+    fetchInitialData();
   }, []);
 
+  // Lógica de filtrado y paginación en el cliente
+  const filteredAppointments = useMemo(() => {
+    return allAppointments
+      .filter(apt => {
+        // Filtro por barbero
+        if (selectedBarber === '') return true; // Si no hay selección, mostrar todos
+        // =================================================================================
+        // === CORRECCIÓN CLAVE: Convertimos ambos valores a Número para una comparación segura ===
+        // =================================================================================
+        return Number(apt.barbero_id) === Number(selectedBarber);
+      })
+      .filter(apt => {
+        // Filtro por término de búsqueda
+        const term = searchTerm.toLowerCase();
+        if (term === '') return true;
+        return apt.client_name?.toLowerCase().includes(term);
+      });
+  }, [allAppointments, searchTerm, selectedBarber]);
+
+  const totalPages = Math.ceil(filteredAppointments.length / ITEMS_PER_PAGE);
+
+  const paginatedAppointments = useMemo(() => {
+    const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
+    return filteredAppointments.slice(startIndex, startIndex + ITEMS_PER_PAGE);
+  }, [filteredAppointments, currentPage]);
+
+  // Resetea a la página 1 cuando los filtros cambian
   useEffect(() => {
-    setPagination(p => ({ ...p, page: 1 }));
+    setCurrentPage(1);
   }, [searchTerm, selectedBarber]);
 
-  useEffect(() => {
-    const handler = setTimeout(() => {
-      fetchAllAppointments();
-    }, 500);
-    return () => clearTimeout(handler);
-  }, [fetchAllAppointments]);
-
-  // --- MANEJADORES DE EVENTOS (sin cambios) ---
+  // --- MANEJADORES DE EVENTOS ---
   const handlePageChange = (newPage) => {
-    if (newPage > 0 && newPage <= pagination.totalPages) {
-      setPagination(p => ({ ...p, page: newPage }));
+    if (newPage > 0 && newPage <= totalPages) {
+      setCurrentPage(newPage);
     }
   };
 
@@ -94,7 +98,6 @@ const AppointmentsPage = () => {
     if (isNaN(appointmentTime.getTime())) return originalStatus || 'Pendiente (Fecha/Hora inválida)';
     return new Date() > appointmentTime ? 'Terminada' : (originalStatus || 'Pendiente');
   };
-
   const formatDate = (dateString) => {
     if (!dateString) return 'N/A';
     try {
@@ -103,7 +106,6 @@ const AppointmentsPage = () => {
       return date.toLocaleDateString('es-ES', { year: 'numeric', month: 'long', day: 'numeric', timeZone: 'UTC' });
     } catch (error) { return dateString; }
   };
-
   const formatTime = (timeString) => {
     if (typeof timeString === 'string' && timeString.includes(':')) return timeString.substring(0, 5);
     return timeString || 'N/A';
@@ -155,8 +157,8 @@ const AppointmentsPage = () => {
               <tr><td colSpan="6" className="messageCell">Cargando citas...</td></tr>
             ) : error ? (
               <tr><td colSpan="6" className="errorCell">{error}</td></tr>
-            ) : allAppointments.length > 0 ? (
-              allAppointments.map(apt => {
+            ) : paginatedAppointments.length > 0 ? (
+              paginatedAppointments.map(apt => {
                 const displayStatus = getAppointmentDisplayStatus(apt.fecha, apt.hora, apt.status);
                 return (
                   <tr key={apt.appointment_id} className="tableRow">
@@ -174,7 +176,7 @@ const AppointmentsPage = () => {
                 );
               })
             ) : (
-              <tr><td colSpan="6" className="messageCell">{message}</td></tr>
+              <tr><td colSpan="6" className="messageCell">No se encontraron citas con los filtros seleccionados.</td></tr>
             )}
           </tbody>
         </table>
@@ -182,22 +184,22 @@ const AppointmentsPage = () => {
 
       <div className="paginationContainer">
         <span>
-          Mostrando <strong>{allAppointments.length}</strong> de <strong>{pagination.total}</strong> resultados
+          Mostrando <strong>{paginatedAppointments.length}</strong> de <strong>{filteredAppointments.length}</strong> resultados
         </span>
         <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
           <button 
-            onClick={() => handlePageChange(pagination.page - 1)} 
-            disabled={pagination.page <= 1}
+            onClick={() => handlePageChange(currentPage - 1)} 
+            disabled={currentPage <= 1}
             className="paginationButton"
           >
             Anterior
           </button>
           <span>
-            Página <strong>{pagination.page}</strong> de <strong>{pagination.totalPages}</strong>
+            Página <strong>{currentPage}</strong> de <strong>{totalPages || 1}</strong>
           </span>
           <button 
-            onClick={() => handlePageChange(pagination.page + 1)} 
-            disabled={pagination.page >= pagination.totalPages}
+            onClick={() => handlePageChange(currentPage + 1)} 
+            disabled={currentPage >= totalPages}
             className="paginationButton"
           >
             Siguiente
