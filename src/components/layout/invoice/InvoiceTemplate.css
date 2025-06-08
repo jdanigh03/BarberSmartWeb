@@ -1,0 +1,214 @@
+/* src/components/invoice/InvoiceTemplate.css */
+.invoice-wrapper {
+  padding: 20px;
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  background-color: #f9f9f9;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.invoice-document {
+  width: 100%;
+  max-width: 800px;
+  background-color: #fff;
+  padding: 40px;
+  border: 1px solid #eee;
+  box-shadow: 0 0 15px rgba(0,0,0,0.07);
+  margin-bottom: 20px;
+}
+
+.invoice-header-section {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start; /* Alinea el logo arriba y el título también */
+  margin-bottom: 40px;
+  padding-bottom: 20px;
+  border-bottom: 2px solid #007bff; /* Línea azul como en el ejemplo */
+}
+
+.invoice-logo-emisor .emisor-logo-img {
+  max-width: 100px; /* Ajusta según tu logo */
+  height: auto;
+}
+
+.invoice-title-section {
+  text-align: right;
+}
+.invoice-title-section h1 {
+  font-size: 2.2em;
+  margin: 0 0 10px 0;
+  color: #333;
+}
+.invoice-meta div {
+  font-size: 0.9em;
+  color: #555;
+  margin-bottom: 3px;
+}
+.invoice-meta span {
+  font-weight: bold;
+  color: #444;
+}
+
+
+.invoice-parties {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 40px;
+}
+.party-details {
+  width: 48%;
+  font-size: 0.95em;
+}
+.party-details h3 {
+  font-size: 0.9em;
+  color: #777;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+  border-bottom: 1px solid #eee;
+  padding-bottom: 5px;
+}
+.party-details strong {
+  font-weight: bold;
+  color: #333;
+  display: block;
+  margin-bottom: 4px;
+}
+.party-details p {
+  margin: 2px 0;
+  line-height: 1.5;
+  color: #444;
+}
+
+.invoice-items-table table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 30px;
+}
+.invoice-items-table th,
+.invoice-items-table td {
+  border-bottom: 1px solid #eee;
+  padding: 10px 0;
+  text-align: left;
+}
+.invoice-items-table th {
+  text-transform: uppercase;
+  font-size: 0.8em;
+  color: #666;
+  border-bottom-width: 2px; /* Línea más gruesa para encabezados de tabla */
+  padding-bottom: 8px;
+}
+.invoice-items-table td {
+  font-size: 0.95em;
+}
+.invoice-items-table td:nth-child(2), /* Precio */
+.invoice-items-table td:nth-child(3), /* Cantidad */
+.invoice-items-table td:nth-child(4)  /* Subtotal */ {
+  text-align: right;
+}
+.invoice-items-table th:nth-child(2),
+.invoice-items-table th:nth-child(3),
+.invoice-items-table th:nth-child(4) {
+  text-align: right;
+}
+
+.invoice-summary-payment {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
+  padding-top: 20px;
+  border-top: 1px dashed #ccc;
+}
+.invoice-payment-instructions {
+  width: 55%;
+  font-size: 0.9em;
+}
+.invoice-payment-instructions h3 {
+  margin-top: 0;
+  font-size: 1.1em;
+  margin-bottom: 10px;
+  color: #333;
+}
+.invoice-payment-instructions p {
+  margin: 4px 0;
+  color: #555;
+}
+
+.invoice-totals {
+  width: 40%;
+  text-align: right;
+  font-size: 1em;
+}
+.invoice-totals div {
+  margin-bottom: 8px;
+  display: flex;
+  justify-content: space-between;
+}
+.invoice-totals span:first-child {
+  color: #555;
+}
+.invoice-totals span:last-child {
+  font-weight: bold;
+  color: #333;
+}
+.invoice-totals .total-final span {
+  font-size: 1.3em;
+  color: #007bff; /* Azul para el total final */
+}
+.invoice-totals .total-final span:first-child {
+    color: #007bff; 
+    font-weight: bold;
+}
+
+
+.invoice-footer-notes {
+  margin-top: 40px;
+  padding-top: 20px;
+  border-top: 1px solid #eee;
+  font-size: 0.85em;
+  color: #777;
+}
+.invoice-footer-notes h3 {
+  margin-top: 0;
+  font-size: 1.1em;
+  color: #555;
+  margin-bottom: 8px;
+}
+
+.print-invoice-btn {
+  padding: 10px 20px;
+  background-color: var(--color-primary, #007bff);
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 1em;
+  transition: background-color 0.2s;
+}
+.print-invoice-btn:hover {
+  background-color: var(--color-primary-hover, #0056b3);
+}
+
+/* Para impresión */
+@media print {
+  body * {
+    visibility: hidden;
+  }
+  .invoice-wrapper, .invoice-wrapper * { /* Asegura que todo dentro de .invoice-wrapper es visible */
+    visibility: visible;
+  }
+  .invoice-wrapper { /* En impresión, el wrapper es el documento principal */
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    padding: 0;
+    margin: 0;
+    box-shadow: none;
+    border: none;
+    background-color: #fff; /* Fondo blanco para impresión */
+  }
+  .print-invoice-btn {
+    display: none; /* Oculta el botón de imprimir */
+  }
+}
