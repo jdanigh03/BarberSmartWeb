@@ -1,11 +1,8 @@
-// src/pages/UsersPage.jsx
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import axios from 'axios';
-import './UsersPage.css'; // Crearemos o actualizaremos este archivo
+import './UsersPage.css';
 
-// Componente Modal para Editar/Crear Usuario
-// src/pages/UsersPage.jsx - DENTRO DEL UserModal
-
+// Componente Modal para Editar Usuario
 const UserModal = ({ user, onClose, onSave, rolesDisponibles }) => {
   const [formData, setFormData] = useState({
     name: '',
@@ -17,16 +14,16 @@ const UserModal = ({ user, onClose, onSave, rolesDisponibles }) => {
   });
 
   useEffect(() => {
-    if (user) {
+    if (user) { // Editando
       setFormData({
         name: user.name || '',
         email: user.email || '',
         telefono: user.telefono || '',
         rol: user.rol || 'Cliente',
         forma_rostro: user.forma_rostro || '',
-        avatar: user.avatar || '', // Carga la URL existente
+        avatar: user.avatar || '', 
       });
-    } else {
+    } else { // Creando (si se implementara)
       setFormData({ name: '', email: '', telefono: '', rol: 'Cliente', forma_rostro: '', avatar: '' });
     }
   }, [user]);
@@ -37,13 +34,12 @@ const UserModal = ({ user, onClose, onSave, rolesDisponibles }) => {
   };
 
   const handleDeleteAvatarField = () => {
-    // Simplemente borra la URL del formulario, el guardado real lo hace onSave
-    setFormData(prev => ({ ...prev, avatar: '' })); 
+    setFormData(prev => ({ ...prev, avatar: '' }));
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    onSave(user ? user.id : null, formData); // formData ahora incluye la URL del avatar
+    onSave(user ? user.id : null, formData);
   };
 
   return (
@@ -54,19 +50,18 @@ const UserModal = ({ user, onClose, onSave, rolesDisponibles }) => {
         <form onSubmit={handleSubmit}>
           {formData.avatar && (
             <div className="avatar-preview">
-              <img src={formData.avatar} alt="Avatar actual" /> 
+              <img src={formData.avatar} alt="Avatar actual" />
             </div>
           )}
           <div>
             <label>URL del Avatar:</label>
             <input type="text" name="avatar" placeholder="https://ejemplo.com/imagen.jpg" value={formData.avatar} onChange={handleChange} />
-            {formData.avatar && 
-              <button type="button" onClick={handleDeleteAvatarField} className="delete-avatar-btn" style={{marginLeft: '10px', marginTop: '5px'}}>
+            {formData.avatar &&
+              <button type="button" onClick={handleDeleteAvatarField} className="delete-avatar-btn" style={{ marginLeft: '10px', marginTop: '5px' }}>
                 Borrar URL del Avatar
               </button>
             }
           </div>
-          {/* Otros campos como antes (name, email, telefono, rol, forma_rostro) */}
           <div>
             <label>Nombre:</label>
             <input type="text" name="name" value={formData.name} onChange={handleChange} required />
@@ -104,16 +99,18 @@ const UsersPage = () => {
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [editingUser, setEditingUser] = useState(null); // Para el modal de edición
+  const [editingUser, setEditingUser] = useState(null);
   const [showModal, setShowModal] = useState(false);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [roleFilter, setRoleFilter] = useState('Todos');
 
-  const rolesDisponibles = ['Cliente', 'Barbero', 'Administrador']; // Define los roles posibles
+  const rolesDisponiblesParaFiltro = ['Todos', 'Cliente', 'Barbero', 'Administrador'];
+  const rolesParaModal = ['Cliente', 'Barbero', 'Administrador']; // Sin 'Todos' para el select del modal
 
   const fetchUsers = async () => {
     try {
       setLoading(true);
       setError(null);
-      // Usar el nuevo endpoint que trae todos los usuarios y más datos
       const response = await axios.get('http://localhost:3001/api/admin/all-users');
       if (response.data.success) {
         setUsers(response.data.users);
@@ -142,24 +139,19 @@ const UsersPage = () => {
     setEditingUser(null);
   };
 
-  const handleSaveUser = async (userId, userData /*, avatarFile */) => {
-    // Aquí es donde la lógica de subir el avatarFile primero sería necesaria si se implementa
-    // const formDataWithAvatar = new FormData();
-    // Object.keys(userData).forEach(key => formDataWithAvatar.append(key, userData[key]));
-    // if (avatarFile) {
-    //   formDataWithAvatar.append('avatarImage', avatarFile); // 'avatarImage' debe coincidir con el backend
-    // }
-    
+  const handleSaveUser = async (userId, userData) => {
     try {
       let response;
       if (userId) { // Editando
-        response = await axios.put(`http://localhost:3001/api/users/${userId}`, userData); // Sin 'avatarFile' por ahora
-      } else { // Creando (no implementado el botón de crear aún)
-        // response = await axios.post('http://localhost:3001/api/users', userData);
+        response = await axios.put(`http://localhost:3001/api/users/${userId}`, userData);
+      } else {
+        // Implementar creación de usuario si es necesario
+        alert("Funcionalidad de crear nuevo usuario no implementada.");
+        return;
       }
 
       if (response.data.success) {
-        fetchUsers(); // Recargar lista de usuarios
+        fetchUsers();
         handleCloseModal();
         alert(response.data.message || 'Operación exitosa.');
       } else {
@@ -176,7 +168,7 @@ const UsersPage = () => {
       try {
         const response = await axios.delete(`http://localhost:3001/api/users/${userId}`);
         if (response.data.success) {
-          fetchUsers(); // Recargar lista
+          fetchUsers();
           alert(response.data.message);
         } else {
           alert(response.data.message || 'Error al eliminar usuario.');
@@ -187,69 +179,106 @@ const UsersPage = () => {
       }
     }
   };
-  
-  const API_BASE_URL_STATIC = 'http://localhost:3001'; // Para construir URL de avatares
+
+  const filteredUsers = useMemo(() => {
+    return users
+      .filter(user => {
+        if (roleFilter === 'Todos') return true;
+        return user.rol === roleFilter;
+      })
+      .filter(user => {
+        const term = searchTerm.toLowerCase();
+        if (!term) return true;
+        return (
+          user.name?.toLowerCase().includes(term) ||
+          user.email?.toLowerCase().includes(term) ||
+          user.telefono?.toLowerCase().includes(term)
+        );
+      });
+  }, [users, searchTerm, roleFilter]);
 
   return (
     <div className="users-page-container">
       <header className="users-header">
-        <h1>Gestión de Usuarios</h1>
-        <p>Administra todos los usuarios registrados en el sistema.</p>
-        {/* <button className="add-user-button" onClick={() => handleEditUser(null)}>+ Añadir Nuevo Usuario</button> */}
+        <div>
+            <h1>Gestión de Usuarios</h1>
+            <p>Administra todos los usuarios registrados en el sistema.</p>
+        </div>
       </header>
+
+      <div className="users-filters-container">
+        <input
+          type="text"
+          placeholder="Buscar por nombre, email, teléfono..."
+          className="users-search-input"
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+        />
+        <select 
+          className="users-role-filter" 
+          value={roleFilter} 
+          onChange={(e) => setRoleFilter(e.target.value)}
+        >
+          {rolesDisponiblesParaFiltro.map(role => (
+            <option key={role} value={role}>{role === 'Todos' ? 'Todos los Roles' : role}</option>
+          ))}
+        </select>
+      </div>
 
       {loading && <div className="loading-message-users">Cargando usuarios...</div>}
       {error && <div className="error-message-users">Error: {error}</div>}
       
       {!loading && !error && (
-        <table className="users-table">
-          <thead>
-            <tr>
-              <th>ID</th>
-              <th>Avatar</th>
-              <th>Nombre</th>
-              <th>Email</th>
-              <th>Teléfono</th>
-              <th>Rol</th>
-              <th>Forma Rostro</th>
-              <th>Registrado</th>
-              <th>Acciones</th>
-            </tr>
-          </thead>
-          <tbody>
-            {users.length === 0 ? (
-              <tr><td colSpan="9" className="no-users-message">No hay usuarios registrados.</td></tr>
-            ) : (
-              users.map(user => (
-                <tr key={user.id}>
-                  <td>{user.id}</td>
-                  <td>
-                    {user.avatar ? (
-                      <img 
-                        src={user.avatar}
-                        alt={`Avatar de ${user.name}`} 
-                        className="user-avatar-thumbnail"
-                        onError={(e) => { e.target.style.display='none';}} 
-                      />
-                    ) : (
-                      <span className="no-avatar-placeholder">Sin Avatar</span>
-                    )}
-                  </td>
-                  <td>{user.name}</td>
-                  <td>{user.email}</td>
-                  <td>{user.telefono || '-'}</td>
-                  <td><span className={`role-badge role-${user.rol?.toLowerCase()}`}>{user.rol}</span></td>
-                  <td>{user.forma_rostro || '-'}</td>
-                  <td>{user.created_at ? new Date(user.created_at).toLocaleDateString() : '-'}</td>
-                  <td>
-                    <button onClick={() => handleEditUser(user)} className="action-button-users edit">Editar</button>
-                    <button onClick={() => handleDeleteUser(user.id, user.name)} className="action-button-users delete">Eliminar</button>
-                  </td>
-                </tr>
-              ))
-            )}
-          </tbody>
-        </table>
+        <div className="table-responsive-users">
+          <table className="users-table">
+            <thead>
+              <tr>
+                {/* Se oculta la columna ID visualmente */}
+                <th>Avatar</th>
+                <th>Nombre</th>
+                <th>Email</th>
+                <th>Teléfono</th>
+                <th>Rol</th>
+                <th>Forma Rostro</th>
+                <th>Registrado</th>
+                <th>Acciones</th>
+              </tr>
+            </thead>
+            <tbody>
+              {filteredUsers.length === 0 ? (
+                <tr><td colSpan="7" className="no-users-message"> {/* colSpan ahora es 7 */}
+                    No hay usuarios que coincidan con los filtros.
+                </td></tr>
+              ) : (
+                filteredUsers.map(user => (
+                  <tr key={user.id}>
+                    <td>
+                      {user.avatar ? (
+                        <img 
+                          src={user.avatar}
+                          alt={`Avatar de ${user.name}`} 
+                          className="user-avatar-thumbnail" 
+                        />
+                      ) : (
+                        <span className="no-avatar-placeholder">S/A</span>
+                      )}
+                    </td>
+                    <td>{user.name}</td>
+                    <td>{user.email}</td>
+                    <td>{user.telefono || '-'}</td>
+                    <td><span className={`role-badge role-${user.rol?.toLowerCase()}`}>{user.rol}</span></td>
+                    <td>{user.forma_rostro || '-'}</td>
+                    <td>{user.created_at ? new Date(user.created_at).toLocaleDateString('es-ES') : '-'}</td>
+                    <td>
+                      <button onClick={() => handleEditUser(user)} className="action-button-users edit">Editar</button>
+                      <button onClick={() => handleDeleteUser(user.id, user.name)} className="action-button-users delete">Eliminar</button>
+                    </td>
+                  </tr>
+                ))
+              )}
+            </tbody>
+          </table>
+        </div>
       )}
 
       {showModal && editingUser && (
@@ -257,11 +286,9 @@ const UsersPage = () => {
           user={editingUser} 
           onClose={handleCloseModal} 
           onSave={handleSaveUser} 
-          rolesDisponibles={rolesDisponibles}
+          rolesDisponibles={rolesParaModal}
         />
       )}
-       {/* Para crear un nuevo usuario, se pasaría null al UserModal: */}
-       {/* {showModal && !editingUser && ( <UserModal user={null} ... /> )} */}
     </div>
   );
 };

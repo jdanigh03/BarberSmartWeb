@@ -7,9 +7,7 @@
 }
 
 .users-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+  display: block; /* Para que el título y párrafo se apilen */
   margin-bottom: 30px;
   padding-bottom: 15px;
   border-bottom: 1px solid var(--color-border, #e0e0e0);
@@ -18,27 +16,47 @@
 .users-header h1 {
   color: var(--color-primary, #333);
   font-size: 2em;
-  margin-bottom: 0; /* Ajuste para alineación con botón */
+  margin-bottom: 5px; 
 }
+
 .users-header p {
-    color: var(--color-text-secondary, #555);
-    font-size: 1.1em;
-    margin-top: 5px; /* Ajustar margen si el H1 tiene margen inferior cero */
+  color: var(--color-text-secondary, #555);
+  font-size: 1.1em;
+  margin-top: 0;
 }
 
+/* --- ESTILOS PARA FILTROS --- */
+.users-filters-container {
+  display: flex;
+  gap: 15px;
+  margin-bottom: 25px;
+  align-items: center;
+  padding: 15px;
+  background-color: var(--color-background, #f8f9fa);
+  border-radius: 8px;
+}
 
-.add-user-button {
-  padding: 10px 18px;
-  background-color: var(--color-primary, #007bff);
-  color: var(--color-text-on-primary, white);
-  border: none;
+.users-search-input, 
+.users-role-filter {
+  padding: 10px 12px;
+  border: 1px solid var(--color-border, #ccc);
   border-radius: 6px;
   font-size: 1em;
-  cursor: pointer;
-  transition: background-color 0.2s ease;
+  background-color: var(--color-surface, #fff);
+  color: var(--color-text-primary, #333);
 }
-.add-user-button:hover {
-  background-color: var(--color-primary-hover, #0056b3);
+
+.users-search-input {
+  flex-grow: 1;
+}
+
+.users-role-filter {
+  min-width: 200px;
+  appearance: none; 
+  background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23007BC2%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E');
+  background-repeat: no-repeat;
+  background-position: right .7em top 50%, 0 0;
+  background-size: .65em auto, 100%;
 }
 
 .loading-message-users,
@@ -56,14 +74,23 @@
   border-radius: 6px;
 }
 
-.users-table {
+/* --- ESTILOS PARA LA TABLA Y RESPONSIVIDAD --- */
+.table-responsive-users {
   width: 100%;
-  border-collapse: collapse;
-  margin-top: 20px;
+  overflow-x: auto; 
+  -webkit-overflow-scrolling: touch; 
   background-color: var(--color-surface, #fff);
   box-shadow: 0 1px 8px rgba(0, 0, 0, 0.06);
   border-radius: 8px;
-  overflow: hidden; /* Para que el borde redondeado afecte a la tabla */
+  margin-top: 20px;
+}
+
+.users-table {
+  width: 100%;
+  min-width: 800px; 
+  border-collapse: collapse;
+  border-radius: 8px; /* Para que el borde afecte a la tabla si .table-responsive-users no tiene background */
+  overflow: hidden; /* Si se usa border-radius en la tabla directamente */
 }
 
 .users-table th,
@@ -73,41 +100,53 @@
   border-bottom: 1px solid var(--color-border, #eee);
   color: var(--color-text-primary, #333);
   vertical-align: middle;
+  white-space: nowrap;
 }
+
+.users-table td:nth-of-type(1), /* Avatar, ahora es la primera visible */
+.users-table td:nth-of-type(2), /* Nombre, ahora es la segunda visible */
+.users-table td:nth-of-type(3)  /* Email, ahora es la tercera visible */ {
+  white-space: normal; 
+  min-width: 150px; 
+}
+.users-table td:nth-of-type(1) { min-width: auto; } /* Avatar no necesita min-width grande */
+
 
 .users-table th {
   background-color: var(--color-background, #f8f9fa);
   font-weight: 600;
   color: var(--color-primary, #333);
-  white-space: nowrap;
 }
+
 .users-table tr:last-child td {
   border-bottom: none;
 }
+
 .users-table tbody tr:hover {
   background-color: rgba(0,0,0,0.025);
 }
 
 .user-avatar-thumbnail {
-  width: 40px;
-  height: 40px;
+  width: 35px;
+  height: 35px;
   border-radius: 50%;
   object-fit: cover;
   border: 1px solid var(--color-border, #ddd);
 }
 .no-avatar-placeholder {
-  display: inline-block;
-  width: 40px;
-  height: 40px;
-  line-height: 40px; /* Centra verticalmente el texto si lo usas */
+  display: inline-flex; /* Flex para centrar texto si es necesario */
+  align-items: center;
+  justify-content: center;
+  width: 35px;
+  height: 35px;
   border-radius: 50%;
   background-color: var(--color-border, #e9ecef);
   color: var(--color-text-secondary, #6c757d);
-  font-size: 0.75em;
+  font-size: 0.8em; /* S/A */
   text-align: center;
   font-style: italic;
+  font-weight: 500;
 }
-
 
 .role-badge {
   padding: 4px 8px;
@@ -119,10 +158,9 @@
   min-width: 70px;
   text-align: center;
 }
-.role-cliente { background-color: #17a2b8; } /* Info blue */
-.role-barbero { background-color: #ffc107; color: #333; } /* Warning yellow */
-.role-administrador { background-color: #28a745; } /* Success green */
-
+.role-cliente { background-color: #17a2b8; } 
+.role-barbero { background-color: #ffc107; color: #333; } 
+.role-administrador { background-color: #28a745; } 
 
 .action-button-users {
   padding: 6px 10px;
@@ -133,19 +171,22 @@
   font-size: 0.9em;
   transition: opacity 0.2s;
 }
+.action-button-users:last-child {
+  margin-right: 0; /* Quita margen al último botón de acción */
+}
 .action-button-users:hover {
   opacity: 0.8;
 }
 .action-button-users.edit {
-  background-color: #007bff; /* Primary blue */
+  background-color: #007bff; 
   color: white;
 }
 .action-button-users.delete {
-  background-color: #dc3545; /* Danger red */
+  background-color: #dc3545;
   color: white;
 }
 
-/* Modal Styles */
+/* Modal Styles (como los tenías, ya son bastante completos) */
 .modal-backdrop-users {
   position: fixed;
   top: 0;
@@ -155,8 +196,11 @@
   background-color: rgba(0, 0, 0, 0.6);
   display: flex;
   justify-content: center;
-  align-items: center;
-  z-index: 1050; /* Asegúrate que esté por encima de otros elementos */
+  align-items: center; 
+  z-index: 1050; 
+  overflow-y: auto; 
+  padding: 20px; 
+  box-sizing: border-box; 
 }
 
 .modal-content-users {
@@ -165,8 +209,11 @@
   border-radius: 8px;
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
   width: 90%;
-  max-width: 550px;
-  position: relative;
+  max-width: 550px; 
+  position: relative; 
+  max-height: 90vh; 
+  display: flex; 
+  flex-direction: column; 
 }
 
 .modal-close-button-users {
@@ -190,6 +237,13 @@
   margin-bottom: 20px;
   font-size: 1.6em;
   color: var(--color-primary, #333);
+  flex-shrink: 0; 
+}
+
+.modal-content-users form {
+  overflow-y: auto; 
+  flex-grow: 1; 
+  padding-right: 10px; 
 }
 
 .modal-content-users form div {
@@ -214,19 +268,21 @@
   font-size: 1em;
 }
 .modal-content-users form select {
-  appearance: none; /* Para estilos más consistentes en diferentes navegadores */
+  appearance: none;
   background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23007BC2%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E');
   background-repeat: no-repeat;
   background-position: right .7em top 50%, 0 0;
   background-size: .65em auto, 100%;
 }
 
-
 .modal-actions-users {
   margin-top: 25px;
   display: flex;
   justify-content: flex-end;
   gap: 10px;
+  flex-shrink: 0; 
+  padding-top: 15px; 
+  border-top: 1px solid var(--color-border, #eee); 
 }
 .modal-actions-users button {
   padding: 10px 20px;
@@ -237,7 +293,7 @@
   cursor: pointer;
 }
 .save-button-users {
-  background-color: #28a745; /* Verde */
+  background-color: #28a745;
   color: white;
 }
 .cancel-button-users {
