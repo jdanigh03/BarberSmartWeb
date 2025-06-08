@@ -225,9 +225,52 @@
 }
 .action-button-invoice:hover { background-color: #5a6268; }
 
-.invoice-modal-overlay { /* ... */ }
-.invoice-modal-content { /* ... */ }
-.close-invoice-modal-btn { /* ... */ }
+
+/* Estilos para el Modal de la Factura (usando react-modal) */
+.invoice-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.75);
+  z-index: 1100; /* Encima de otros modales si los hay */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.invoice-modal-content {
+  position: relative;
+  background: #fff;
+  overflow: auto; /* Para scroll si el contenido del invoice es muy largo */
+  border-radius: 8px;
+  outline: none;
+  padding: 0; /* El padding lo dará InvoiceTemplate */
+  width: 90%;
+  max-width: 850px; /* Ancho similar a una hoja A4 */
+  max-height: 90vh;
+}
+
+.close-invoice-modal-btn {
+  position: sticky; /* O fixed relativo al modal, para que quede visible al scrollear la factura */
+  bottom: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 10px 20px;
+  background-color: #dc3545; /* Rojo */
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 1em;
+  z-index: 10; /* Encima del contenido de la factura */
+  margin-top: 15px; /* Para separar del contenido de InvoiceTemplate */
+}
+.close-invoice-modal-btn:hover {
+  background-color: #c82333;
+}
 
 /* Media query para responsividad de la tabla (data-label) como estaba antes */
 @media (max-width: 768px) { /* O un breakpoint más grande si tu tabla tiene muchas columnas, ej: 992px */
