@@ -1,10 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import './BarbersPage.css';
+import BarberAdd from './BarberAdd';
 
 const BarbersPage = () => {
   const [barberos, setBarberos] = useState([]);
+  const [barberias, setBarberias] = useState([]);
   const [editando, setEditando] = useState(null);
+  const [mostrarFormulario, setMostrarFormulario] = useState(false);
   const [formData, setFormData] = useState({
     especialidad: '',
     descripcion_profesional: '',
@@ -14,13 +17,29 @@ const BarbersPage = () => {
 
   useEffect(() => {
     fetchBarberos();
+    fetchBarberias();
   }, []);
 
   const fetchBarberos = async () => {
-    const res = await axios.get('http://localhost:3001/api/barberos');
-    if (res.data.success) {
-      const barberosFiltrados = res.data.barberos.filter(barber => barber.rol === 'Barbero');
-      setBarberos(barberosFiltrados);
+    try {
+      const res = await axios.get('http://localhost:3001/api/barberos');
+      if (res.data.success) {
+        const filtrados = res.data.barberos.filter(b => b.rol === 'Barbero');
+        setBarberos(filtrados);
+      }
+    } catch (error) {
+      console.error('Error al obtener barberos:', error);
+    }
+  };
+
+  const fetchBarberias = async () => {
+    try {
+      const res = await axios.get('http://localhost:3001/api/barberias');
+      if (res.data.success) {
+        setBarberias(res.data.barberias);
+      }
+    } catch (error) {
+      console.error('Error al obtener barberías:', error);
     }
   };
 
@@ -59,9 +78,23 @@ const BarbersPage = () => {
     }
   };
 
+  const getNombreBarberia = (id) => {
+    const barberia = barberias.find(b => b.id === Number(id));
+    return barberia ? barberia.nombre : 'No asignada';
+  };
+
   return (
     <div>
       <h1>Gestión de Barberos</h1>
+
+      <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: '10px' }}>
+        <button className="btn-guardar" onClick={() => setMostrarFormulario(true)}>+ Añadir Barbero</button>
+      </div>
+
+      {mostrarFormulario && (
+        <BarberAdd onClose={() => { setMostrarFormulario(false); fetchBarberos(); }} />
+      )}
+
       <div className="barber-list">
         {barberos.map(barber => (
           <div key={barber.usuario_id} className="barber-card">
@@ -80,7 +113,7 @@ const BarbersPage = () => {
             </div>
 
             <div className="barber-detail">
-              <strong>Barbería ID:</strong> {barber.barberia_id || <em>No asignada</em>}
+              <strong>Barbería:</strong> {getNombreBarberia(barber.barberia_id)}
             </div>
 
             {editando === barber.usuario_id ? (
@@ -98,16 +131,25 @@ const BarbersPage = () => {
                 <input
                   type="number"
                   placeholder="Calificación"
+                  min="0"
+                  max="5"
+                  step="0.01"
                   value={formData.calificacion_promedio}
                   onChange={(e) => setFormData({ ...formData, calificacion_promedio: e.target.value })}
                 />
-                <input
-                  type="number"
-                  placeholder="Barbería ID"
+                <select
                   value={formData.barberia_id}
                   onChange={(e) => setFormData({ ...formData, barberia_id: e.target.value })}
-                />
-                <button className="btn-guardar" onClick={() => handleSave(barber.usuario_id)}>Guardar</button>
+                >
+                  <option value="">Seleccione una barbería</option>
+                  {barberias.map(b => (
+                    <option key={b.id} value={b.id}>{b.nombre}</option>
+                  ))}
+                </select>
+                <div className="barber-actions">
+                  <button className="btn-guardar" onClick={() => handleSave(barber.usuario_id)}>Guardar</button>
+                  <button className="btn-eliminar" onClick={() => setEditando(null)}>Cancelar</button>
+                </div>
               </div>
             ) : (
               <div className="barber-actions">
