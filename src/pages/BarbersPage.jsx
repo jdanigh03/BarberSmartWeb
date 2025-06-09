@@ -112,10 +112,6 @@ const BarbersPage = () => {
               <strong>Calificación:</strong> {barber.calificacion_promedio || <em>No registrada</em>}
             </div>
 
-            <div className="barber-detail">
-              <strong>Barbería:</strong> {getNombreBarberia(barber.barberia_id)}
-            </div>
-
             {editando === barber.usuario_id ? (
               <div className="barber-form">
                 <input
