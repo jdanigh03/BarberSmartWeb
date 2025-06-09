@@ -2,9 +2,9 @@
 
 .payments-page-container {
   padding: 25px;
-  max-width: 100%; /* Ocupa el ancho disponible dentro de AdminLayout */
+  max-width: 100%; 
   margin: 0 auto;
-  font-family: var(--font-family-main, Arial, sans-serif); /* Usa tus variables globales si las tienes */
+  font-family: var(--font-family-main, Arial, sans-serif); 
 }
 
 .payments-header {
@@ -29,6 +29,9 @@
   gap: 15px;
   margin-bottom: 25px;
   align-items: center;
+  padding: 15px;
+  background-color: var(--color-background, #f8f9fa);
+  border-radius: 8px;
 }
 
 .search-input, .status-filter {
@@ -74,40 +77,125 @@
 }
 
 .error-message {
-  color: #dc3545; /* Rojo para errores */
+  color: #dc3545; 
   border-color: #dc3545;
   background-color: #f8d7da;
+}
+
+/* --- ESTILOS DE TABLA MEJORADOS --- */
+.payments-table-wrapper { /* Nuevo contenedor para el scroll */
+  width: 100%;
+  overflow-x: auto; /* Scroll horizontal si la tabla es muy ancha */
+  -webkit-overflow-scrolling: touch;
+  margin-top: 10px;
 }
 
 .payments-table {
   width: 100%;
   border-collapse: collapse;
-  margin-top: 10px;
+  /* min-width: 900px;  Un ancho mínimo general si se quiere forzar scroll antes, pero manejaremos por columnas */
 }
 
 .payments-table th,
 .payments-table td {
-  padding: 12px 15px;
+  padding: 10px 12px; /* Ligeramente menos padding para ahorrar espacio */
   text-align: left;
   border-bottom: 1px solid var(--color-border, #eee);
   color: var(--color-text-primary, #333);
+  vertical-align: middle;
 }
 
 .payments-table th {
-  background-color: var(--color-background, #f9f9f9); /* Un fondo ligeramente diferente para encabezados */
+  background-color: var(--color-background, #f9f9f9); 
   font-weight: 600;
   color: var(--color-primary, #333);
-  white-space: nowrap;
+  white-space: nowrap; /* Los encabezados no se rompen */
+  font-size: 0.9em; /* Un poco más pequeño el encabezado */
 }
 
 .payments-table tr:last-child td {
   border-bottom: none;
 }
 
-.payments-table tr:hover {
-  background-color: #f5f5f525; /* Un sutil hover */
+.payments-table tbody tr:hover { /* tbody añadido para especificidad */
+  background-color: rgba(0,0,0,0.025); /* Un sutil hover */
 }
 
+/* --- Ajuste de anchos y comportamiento de columnas específicas --- */
+.payments-table th:nth-child(1), /* ID Cita */
+.payments-table td:nth-child(1) {
+  width: 8%; /* Más pequeño */
+  min-width: 70px;
+  white-space: nowrap;
+}
+
+.payments-table th:nth-child(2), /* Cliente */
+.payments-table td:nth-child(2) {
+  width: 15%;
+  min-width: 120px;
+  white-space: normal; /* Permitir ajuste */
+}
+
+.payments-table th:nth-child(3), /* Barbero */
+.payments-table td:nth-child(3) {
+  width: 15%;
+  min-width: 120px;
+  white-space: normal;
+}
+
+.payments-table th:nth-child(4), /* Fecha Cita */
+.payments-table td:nth-child(4) {
+  width: 13%;
+  min-width: 130px; /* Espacio para fecha y hora */
+  white-space: nowrap;
+}
+
+.payments-table th:nth-child(5), /* Servicios */
+.payments-table td:nth-child(5).services-cell { /* services-cell viene de tu JSX */
+  width: 20%; /* Más espacio para servicios */
+  min-width: 180px;
+  white-space: normal; /* Permitir que se ajuste en múltiples líneas */
+  word-break: break-word; /* Romper palabras largas si es necesario */
+}
+
+.payments-table th:nth-child(6), /* Monto */
+.payments-table td:nth-child(6) {
+  width: 8%;
+  min-width: 80px;
+  text-align: right; /* Alinea montos a la derecha */
+  white-space: nowrap;
+}
+
+.payments-table th:nth-child(7), /* Método */
+.payments-table td:nth-child(7) {
+  width: 8%;
+  min-width: 90px;
+  white-space: nowrap;
+}
+
+.payments-table th:nth-child(8), /* Estado */
+.payments-table td:nth-child(8) {
+  width: 8%;
+  min-width: 100px; /* Para el badge */
+  text-align: center; /* Centrar el badge */
+}
+
+.payments-table th:nth-child(9), /* Confirmado */
+.payments-table td:nth-child(9) {
+  width: 10%;
+  min-width: 120px; /* Espacio para fecha y hora */
+  white-space: nowrap;
+}
+
+.payments-table th:nth-child(10), /* Factura */
+.payments-table td:nth-child(10) {
+  width: 8%; /* O el ancho que necesites para el botón */
+  min-width: 100px;
+  text-align: center; /* Centrar el botón o guion */
+}
+
+
+/* Badges de Estado (sin cambios, ya estaban bien) */
 .payment-status-badge {
   padding: 5px 10px;
   border-radius: 15px;
@@ -116,32 +204,76 @@
   color: #fff;
   text-transform: capitalize;
   white-space: nowrap;
+  display: inline-block; /* Para que el centrado en td funcione bien */
+}
+.payment-status-paid { background-color: #28a745; }
+.payment-status-pending { background-color: #ffc107; color: #333; }
+.payment-status-cancelled { background-color: #dc3545; }
+.payment-status-unknown { background-color: #6c757d; }
+
+
+/* Botón de factura y Modal (sin cambios mayores aquí, ya estaban en el código anterior) */
+.action-button-invoice { /* Estilo que ya te había pasado */
+  padding: 5px 10px;
+  background-color: #6c757d;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.85em;
+  white-space: nowrap;
+}
+.action-button-invoice:hover { background-color: #5a6268; }
+
+
+/* Estilos para el Modal de la Factura (usando react-modal) */
+.invoice-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.75);
+  z-index: 1100; /* Encima de otros modales si los hay */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
 }
 
-.payment-status-paid {
-  background-color: #28a745; /* Verde */
+.invoice-modal-content {
+  position: relative;
+  background: #fff;
+  overflow: auto; /* Para scroll si el contenido del invoice es muy largo */
+  border-radius: 8px;
+  outline: none;
+  padding: 0; /* El padding lo dará InvoiceTemplate */
+  width: 90%;
+  max-width: 850px; /* Ancho similar a una hoja A4 */
+  max-height: 90vh;
 }
 
-.payment-status-pending {
-  background-color: #ffc107; /* Amarillo */
-  color: #333; /* Texto oscuro para mejor contraste con amarillo */
-}
-
-.payment-status-cancelled {
+.close-invoice-modal-btn {
+  position: sticky; /* O fixed relativo al modal, para que quede visible al scrollear la factura */
+  bottom: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 10px 20px;
   background-color: #dc3545; /* Rojo */
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 1em;
+  z-index: 10; /* Encima del contenido de la factura */
+  margin-top: 15px; /* Para separar del contenido de InvoiceTemplate */
+}
+.close-invoice-modal-btn:hover {
+  background-color: #c82333;
 }
 
-.payment-status-unknown {
-  background-color: #6c757d; /* Gris */
-}
-
-.services-cell {
-  max-width: 200px; /* Limita el ancho para que no se desborde con muchos servicios */
-  white-space: normal; /* Permite que el texto de los servicios se divida en múltiples líneas */
-}
-
-/* Media queries para responsividad si es necesario */
-@media (max-width: 768px) {
+/* Media query para responsividad de la tabla (data-label) como estaba antes */
+@media (max-width: 768px) { /* O un breakpoint más grande si tu tabla tiene muchas columnas, ej: 992px */
   .filters-container {
     flex-direction: column;
     align-items: stretch;
@@ -149,31 +281,38 @@
   .search-input, .status-filter {
     width: 100%;
   }
-  /* Para tablas en móvil, puedes considerar hacerlas "responsive" */
-  /* Esto es un ejemplo simple, hay técnicas más avanzadas */
+  
+  /* Si el wrapper .payments-table-wrapper ya tiene overflow-x: auto, */
+  /* la técnica de data-label podría no ser necesaria o interferir. */
+  /* Decide si prefieres scroll horizontal o la transformación de la tabla. */
+  /* Si eliges la transformación, asegúrate de que `overflow-x: auto` en el wrapper */
+  /* no esté activo o se ajuste. */
+  
+  /* DESCOMENTA ESTO SI PREFIERES LA TRANSFORMACIÓN DE TABLA EN LUGAR DE SCROLL HORIZONTAL */
+  /* 
   .payments-table thead {
-    display: none; /* Oculta encabezados en móvil */
+    display: none;
   }
   .payments-table td {
     display: block;
-    text-align: right; /* Alinea el texto a la derecha */
-    padding-left: 50%; /* Deja espacio para la etiqueta "data-label" */
+    text-align: right !important; // Forzar alineación para la etiqueta
+    padding-left: 50% !important; 
     position: relative;
     border-bottom: 1px dotted #ccc;
+    white-space: normal !important; // Permitir ajuste en todas las celdas
   }
-  .payments-table td:last-child {
-      border-bottom: 2px solid var(--color-primary, #333); /* Borde más grueso para separar items */
+  .payments-table td:last-of-type { // Usa last-of-type por si se ocultan algunas
+      border-bottom: 2px solid var(--color-primary, #333);
   }
   .payments-table td::before {
-    content: attr(data-label); /* El contenido del pseudo-elemento es el valor del atributo */
+    content: attr(data-label);
     position: absolute;
     left: 10px;
-    width: calc(50% - 20px); /* Ancho de la etiqueta */
+    width: calc(50% - 20px);
     padding-right: 10px;
     font-weight: bold;
-    text-align: left;
+    text-align: left !important;
     white-space: nowrap;
   }
-  /* Necesitarías añadir el atributo data-label a cada td en el JSX */
-  /* Ej: <td data-label="ID Cita">#{payment.cita_id}</td> */
+  */
 }
