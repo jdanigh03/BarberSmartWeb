@@ -173,6 +173,15 @@
   cursor: pointer;
   color: #007bff;
   margin-left: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 16px; /* Ajusta el tamaño si es necesario */
+  font-weight: bold; /* Para que el número se vea más claro */
+  color: #007bff; /* Un color que coincida con tu diseño */
+  width: 36px; /* Ancho fijo para que no cambie de tamaño */
+  height: 36px; /* Altura fija */
+  padding: 0;
 }
 
 .refresh-captcha-button:hover {
