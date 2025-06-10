@@ -5,7 +5,7 @@ import BarberAdd from './BarberAdd';
 
 const BarbersPage = () => {
   const [barberos, setBarberos] = useState([]);
-  const [barberias, setBarberias] = useState([]);
+  // const [barberias, setBarberias] = useState([]);
   const [editando, setEditando] = useState(null);
   const [mostrarFormulario, setMostrarFormulario] = useState(false);
   const [formData, setFormData] = useState({
@@ -17,7 +17,7 @@ const BarbersPage = () => {
 
   useEffect(() => {
     fetchBarberos();
-    fetchBarberias();
+    // fetchBarberias();
   }, []);
 
   const fetchBarberos = async () => {
@@ -32,16 +32,16 @@ const BarbersPage = () => {
     }
   };
 
-  const fetchBarberias = async () => {
-    try {
-      const res = await axios.get('http://localhost:3001/api/barberias');
-      if (res.data.success) {
-        setBarberias(res.data.barberias);
-      }
-    } catch (error) {
-      console.error('Error al obtener barberías:', error);
-    }
-  };
+  // const fetchBarberias = async () => {
+  //   try {
+  //     const res = await axios.get('http://localhost:3001/api/barberias');
+  //     if (res.data.success) {
+  //       setBarberias(res.data.barberias);
+  //     }
+  //   } catch (error) {
+  //     console.error('Error al obtener barberías:', error);
+  //   }
+  // };
 
   const handleEditClick = (barbero) => {
     setEditando(barbero.usuario_id);
@@ -78,10 +78,10 @@ const BarbersPage = () => {
     }
   };
 
-  const getNombreBarberia = (id) => {
-    const barberia = barberias.find(b => b.id === Number(id));
-    return barberia ? barberia.nombre : 'No asignada';
-  };
+  // const getNombreBarberia = (id) => {
+  //   const barberia = barberias.find(b => b.id === Number(id));
+  //   return barberia ? barberia.nombre : 'No asignada';
+  // };
 
   return (
     <div>
