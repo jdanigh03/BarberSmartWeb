@@ -78,10 +78,10 @@ const BarbersPage = () => {
     }
   };
 
-  // const getNombreBarberia = (id) => {
-  //   const barberia = barberias.find(b => b.id === Number(id));
-  //   return barberia ? barberia.nombre : 'No asignada';
-  // };
+  const getNombreBarberia = (id) => {
+    const barberia = barberias.find(b => b.id === Number(id));
+    return barberia ? barberia.nombre : 'No asignada';
+  };
 
   return (
     <div>
