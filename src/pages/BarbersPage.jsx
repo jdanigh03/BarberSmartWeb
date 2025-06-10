@@ -133,15 +133,6 @@ const BarbersPage = () => {
                   value={formData.calificacion_promedio}
                   onChange={(e) => setFormData({ ...formData, calificacion_promedio: e.target.value })}
                 />
-                <select
-                  value={formData.barberia_id}
-                  onChange={(e) => setFormData({ ...formData, barberia_id: e.target.value })}
-                >
-                  <option value="">Seleccione una barbería</option>
-                  {barberias.map(b => (
-                    <option key={b.id} value={b.id}>{b.nombre}</option>
-                  ))}
-                </select>
                 <div className="barber-actions">
                   <button className="btn-guardar" onClick={() => handleSave(barber.usuario_id)}>Guardar</button>
                   <button className="btn-eliminar" onClick={() => setEditando(null)}>Cancelar</button>
