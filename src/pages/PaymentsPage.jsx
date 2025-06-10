@@ -1,9 +1,10 @@
-// src/pages/PaymentsPage.jsx
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, useRef } from 'react';
 import axios from 'axios';
 import './PaymentsPage.css';
 import InvoiceTemplate from '../components/layout/invoice/InvoiceTemplate.jsx';
 import Modal from 'react-modal';
+import html2canvas from 'html2canvas';
+import jsPDF from 'jspdf';
 
 const PaymentsPage = () => {
   const [payments, setPayments] = useState([]);
@@ -14,6 +15,7 @@ const PaymentsPage = () => {
   const [showInvoiceModal, setShowInvoiceModal] = useState(false);
   const [selectedPaymentForInvoice, setSelectedPaymentForInvoice] = useState(null);
   const [barberiaDetails, setBarberiaDetails] = useState(null);
+  const invoiceRef = useRef();
 
   useEffect(() => {
     const fetchPayments = async () => {
@@ -21,23 +23,15 @@ const PaymentsPage = () => {
         setLoading(true);
         setError(null);
         const response = await axios.get('http://localhost:3001/api/admin/payments-history');
-
         if (response.data.success && Array.isArray(response.data.payments)) {
           setPayments(response.data.payments);
-        } else if (response.data.success && response.data.payments === null) {
-          // Esto podría pasar si tu API devuelve "payments": null cuando no hay
+        } else {
           setPayments([]);
-        }
-         else {
-          // Manejar casos donde response.data.payments no es un array
-          console.warn("API response for payments is not an array or missing:", response.data);
           setError(response.data.message || 'La respuesta de la API para pagos no es válida.');
-          setPayments([]); // Establecer a array vacío en caso de error o formato inesperado
         }
       } catch (err) {
-        console.error("Error fetching payments:", err);
         setError(`Error al cargar historial de pagos: ${err.response?.data?.message || err.message || 'Error desconocido.'}`);
-        setPayments([]); // Asegurar que sea un array vacío en caso de error
+        setPayments([]);
       } finally {
         setLoading(false);
       }
@@ -48,27 +42,19 @@ const PaymentsPage = () => {
 
   const handleViewInvoice = async (payment) => {
     setSelectedPaymentForInvoice(payment);
-    // Ejemplo de cómo podrías obtener datos específicos de la barbería si es necesario
-    // y si tu payment object tiene un barberia_id_para_factura o similar
-    if (payment.barberia_id_para_factura) { 
+    if (payment.barberia_id_para_factura) {
       try {
         const res = await axios.get(`http://localhost:3001/api/barberias/${payment.barberia_id_para_factura}`);
         if (res.data.success && res.data.barberia) {
           setBarberiaDetails(res.data.barberia);
         } else {
-          console.warn("No se encontraron detalles para la barbería:", payment.barberia_id_para_factura);
-          setBarberiaDetails(null); // o un objeto con valores por defecto
+          setBarberiaDetails(null);
         }
-      } catch (e) { 
-        console.error("Error fetching barberia details for invoice", e); 
-        setBarberiaDetails(null); // Usa valores por defecto si falla la carga
+      } catch (e) {
+        setBarberiaDetails(null);
       }
     } else {
-      // Si no hay barberia_id específico, puedes tener un objeto con datos por defecto o generales de BarberSmart
-      setBarberiaDetails({ 
-        nombre: "BarberSmart General",
-        // ... otros datos por defecto ...
-      });
+      setBarberiaDetails({ nombre: "BarberSmart General" });
     }
     setShowInvoiceModal(true);
   };
@@ -77,6 +63,27 @@ const PaymentsPage = () => {
     setShowInvoiceModal(false);
     setSelectedPaymentForInvoice(null);
     setBarberiaDetails(null);
+  };
+
+  const downloadInvoiceAsImage = async () => {
+    if (!invoiceRef.current) return;
+    const canvas = await html2canvas(invoiceRef.current);
+    const link = document.createElement('a');
+    link.download = 'factura.png';
+    link.href = canvas.toDataURL();
+    link.click();
+  };
+
+  const downloadInvoiceAsPDF = async () => {
+    if (!invoiceRef.current) return;
+    const canvas = await html2canvas(invoiceRef.current);
+    const imgData = canvas.toDataURL('image/png');
+    const pdf = new jsPDF('p', 'mm', 'a4');
+    const imgProps = pdf.getImageProperties(imgData);
+    const pdfWidth = pdf.internal.pageSize.getWidth();
+    const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
+    pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
+    pdf.save('factura.pdf');
   };
 
   const getStatusColor = (status) => {
@@ -90,7 +97,6 @@ const PaymentsPage = () => {
 
   const formatDate = (dateString) => {
     if (!dateString) return 'N/A';
-    // Para evitar problemas de zona horaria al solo parsear una fecha (YYYY-MM-DD)
     const parts = dateString.split('-');
     if (parts.length === 3) {
       const date = new Date(parts[0], parts[1] - 1, parts[2]);
@@ -102,7 +108,7 @@ const PaymentsPage = () => {
       year: 'numeric', month: 'long', day: 'numeric',
     });
   };
-  
+
   const formatDateTime = (dateTimeString) => {
     if (!dateTimeString) return 'N/A';
     return new Date(dateTimeString).toLocaleString('es-ES', {
@@ -112,22 +118,21 @@ const PaymentsPage = () => {
   };
 
   const filteredPayments = useMemo(() => {
-    if (!Array.isArray(payments)) return []; // Asegura que payments sea un array
+    if (!Array.isArray(payments)) return [];
     return payments
-    .filter(payment => {
-      const searchTermLower = searchTerm.toLowerCase();
-      return (
-        (payment?.cliente_nombre?.toLowerCase() || '').includes(searchTermLower) ||
-        (payment?.barbero_nombre?.toLowerCase() || '').includes(searchTermLower) ||
-        (payment?.cita_id?.toString() || '').includes(searchTermLower)
-      );
-    })
-    .filter(payment => {
-      if (filterStatus === 'todos') return true;
-      return payment?.estado_pago === filterStatus;
-    });
+      .filter(payment => {
+        const searchTermLower = searchTerm.toLowerCase();
+        return (
+          (payment?.cliente_nombre?.toLowerCase() || '').includes(searchTermLower) ||
+          (payment?.barbero_nombre?.toLowerCase() || '').includes(searchTermLower) ||
+          (payment?.cita_id?.toString() || '').includes(searchTermLower)
+        );
+      })
+      .filter(payment => {
+        if (filterStatus === 'todos') return true;
+        return payment?.estado_pago === filterStatus;
+      });
   }, [payments, searchTerm, filterStatus]);
-
 
   if (loading) {
     return <div className="payments-page-container"><div className="loading-message">Cargando historial de pagos...</div></div>;
@@ -180,7 +185,7 @@ const PaymentsPage = () => {
                   <th>Barbero</th>
                   <th>Fecha Cita</th>
                   <th>Servicios</th>
-                  <th>Monto (Bs.)</th> {/* Modificado aquí */}
+                  <th>Monto (Bs.)</th>
                   <th>Método</th>
                   <th>Estado</th>
                   <th>Confirmado</th>
@@ -195,7 +200,7 @@ const PaymentsPage = () => {
                     <td data-label="Barbero">{payment.barbero_nombre || 'N/A'}</td>
                     <td data-label="Fecha Cita">{formatDate(payment.fecha_cita)} {payment.hora_cita?.substring(0,5) || ''}</td>
                     <td data-label="Servicios" className="services-cell">{Array.isArray(payment.servicio_nombres) ? payment.servicio_nombres.join(', ') : (payment.servicio_nombres || 'N/A')}</td>
-                    <td data-label="Monto Bs.">{payment.monto_total ? parseFloat(payment.monto_total).toFixed(2) : '0.00'}</td> {/* Modificado aquí */}
+                    <td data-label="Monto Bs.">{payment.monto_total ? parseFloat(payment.monto_total).toFixed(2) : '0.00'}</td>
                     <td data-label="Método">{payment.metodo_pago || 'N/A'}</td>
                     <td data-label="Estado">
                       <span className={`payment-status-badge ${getStatusColor(payment.estado_pago)}`}>
@@ -209,7 +214,7 @@ const PaymentsPage = () => {
                           onClick={() => handleViewInvoice(payment)}
                           className="action-button-invoice" 
                         >
-                          Ver/Generar
+                          Descargar Factura
                         </button>
                       ) : (
                         <span>-</span>
@@ -231,13 +236,23 @@ const PaymentsPage = () => {
         overlayClassName="invoice-modal-overlay"
         ariaHideApp={false}
       >
-        {selectedPaymentForInvoice && (
-          <InvoiceTemplate 
-            paymentData={selectedPaymentForInvoice} 
-            barberiaData={barberiaDetails} 
-          />
-        )}
-        <button onClick={closeModal} className="close-invoice-modal-btn">Cerrar Vista de Factura</button>
+        <div ref={invoiceRef}>
+          {selectedPaymentForInvoice && (
+            <InvoiceTemplate 
+              paymentData={selectedPaymentForInvoice} 
+              barberiaData={barberiaDetails} 
+            />
+          )}
+        </div>
+
+        <div style={{ display: 'flex', justifyContent: 'center', gap: '1rem', marginTop: '1rem' }}>
+          <button onClick={downloadInvoiceAsImage} className="action-button-invoice">Descargar Imagen</button>
+          <button onClick={downloadInvoiceAsPDF} className="action-button-invoice">Descargar PDF</button>
+        </div>
+
+        <div style={{ textAlign: 'center', marginTop: '1rem' }}>
+          <button onClick={closeModal} className="close-invoice-modal-btn">Cerrar Vista de Factura</button>
+        </div>
       </Modal>
     </div>
   );
