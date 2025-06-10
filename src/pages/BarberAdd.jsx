@@ -106,19 +106,6 @@ const BarberAdd = ({ onClose }) => {
             onChange={e => setFormData({ ...formData, calificacion_promedio: e.target.value })}
             required
           />
-
-          <label>Barbería:</label>
-          <select
-            value={formData.barberia_id}
-            onChange={e => setFormData({ ...formData, barberia_id: e.target.value })}
-            required
-          >
-            <option value="">Seleccione una barbería</option>
-            {barberias.map(b => (
-              <option key={b.id} value={b.id}>{b.nombre}</option>
-            ))}
-          </select>
-
           <div className="btn-group" style={{ marginTop: '20px' }}>
             <button type="submit" className="btn-guardar">Guardar</button>
             <button type="button" className="btn-eliminar" onClick={onClose}>Cancelar</button>

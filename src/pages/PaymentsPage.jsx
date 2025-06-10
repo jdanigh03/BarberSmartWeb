@@ -78,7 +78,7 @@ const PaymentsPage = () => {
     }
     return 'Fecha Inv.';
   };
-  
+
   const formatDateTime = (dateTimeString) => {
     if (!dateTimeString) return 'N/A';
     const date = new Date(dateTimeString);
@@ -92,6 +92,7 @@ const PaymentsPage = () => {
   };
 
   const filteredPayments = useMemo(() => {
+    if (!Array.isArray(payments)) return [];
     if (!Array.isArray(payments)) return [];
     return payments
       .filter(p => p && typeof p === 'object')

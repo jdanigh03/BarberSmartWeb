@@ -1,8 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import {
+  BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer,
+  LineChart, Line, CartesianGrid
+} from 'recharts';
 
 const DashboardPage = () => {
   const [summary, setSummary] = useState(null);
+  const [chartData, setChartData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -10,7 +15,6 @@ const DashboardPage = () => {
     const fetchSummary = async () => {
       try {
         const res = await axios.get('http://localhost:3001/api/summary');
-        console.log('Resumen recibido:', res.data);
         setSummary(res.data);
       } catch (err) {
         const msg = err.response?.data?.message || 'Error al cargar el resumen del sistema.';
@@ -21,6 +25,18 @@ const DashboardPage = () => {
       }
     };
     fetchSummary();
+  }, []);
+
+  useEffect(() => {
+    const fetchChartData = async () => {
+      try {
+        const res = await axios.get('http://localhost:3001/api/dashboard/charts');
+        setChartData(res.data);
+      } catch (e) {
+        console.error('Error cargando gráficos:', e);
+      }
+    };
+    fetchChartData();
   }, []);
 
   if (loading) return <p>Cargando resumen...</p>;
@@ -76,6 +92,52 @@ const DashboardPage = () => {
           <p>{typeof totalAppointments === 'number' ? totalAppointments : '0'} citas en el sistema</p>
         </div>
       </div>
+
+      {chartData && (
+        <div style={{ marginTop: 40 }}>
+          <h2> Estadísticas Visuales</h2>
+
+          {/* Citas por día */}
+          <div style={{ marginBottom: 30, backgroundColor: '#fff', padding: '20px', borderRadius: '10px' }}>
+            <h3>📅 Citas por Día </h3>
+            <ResponsiveContainer width="100%" height={300}>
+              <BarChart data={chartData.citasPorDia}>
+                <XAxis dataKey="fecha" />
+                <YAxis />
+                <Tooltip />
+                <Bar dataKey="total" fill="#8884d8" />
+              </BarChart>
+            </ResponsiveContainer>
+          </div>
+
+          {/* Ingresos mensuales */}
+          <div style={{ marginBottom: 30, backgroundColor: '#fff', padding: '20px', borderRadius: '10px' }}>
+            <h3>💰 Ingresos Mensuales </h3>
+            <ResponsiveContainer width="100%" height={300}>
+              <LineChart data={chartData.ingresosMensuales}>
+                <CartesianGrid stroke="#ccc" />
+                <XAxis dataKey="mes" />
+                <YAxis />
+                <Tooltip />
+                <Line type="monotone" dataKey="ingresos" stroke="#82ca9d" />
+              </LineChart>
+            </ResponsiveContainer>
+          </div>
+
+          {/* Horas más frecuentes */}
+          <div style={{ marginBottom: 30, backgroundColor: '#fff', padding: '20px', borderRadius: '10px' }}>
+            <h3>⏰ Horas más Frecuentes de Citas</h3>
+            <ResponsiveContainer width="100%" height={300}>
+              <BarChart data={chartData.horasFrecuentes}>
+                <XAxis dataKey="hora" />
+                <YAxis />
+                <Tooltip />
+                <Bar dataKey="total" fill="#ff7300" />
+              </BarChart>
+            </ResponsiveContainer>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
