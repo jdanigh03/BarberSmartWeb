@@ -146,6 +146,39 @@
   flex-grow: 1; /* Allow the paragraph to take up available space in flex container */
 }
 
+/* Agrega esto al final de tu LoginPage.css o donde prefieras */
+
+.captcha-group {
+  margin-bottom: 20px;
+}
+
+.captcha-display {
+  font-size: 24px;
+  font-weight: bold;
+  letter-spacing: 3px;
+  background-color: #f0f0f0;
+  padding: 10px 15px;
+  border-radius: 5px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+  border: 1px dashed #ccc;
+}
+
+.refresh-captcha-button {
+  background: none;
+  border: none;
+  font-size: 20px;
+  cursor: pointer;
+  color: #007bff;
+  margin-left: 10px;
+}
+
+.refresh-captcha-button:hover {
+  color: #0056b3;
+}
+
 /* Removed .login-modal-close-button styles entirely */
 
 @keyframes loginModalFadeInScale {
