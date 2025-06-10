@@ -121,79 +121,70 @@
   background-color: rgba(0,0,0,0.025); /* Un sutil hover */
 }
 
-/* --- Ajuste de anchos y comportamiento de columnas específicas --- */
-.payments-table th:nth-child(1), /* ID Cita */
+.payments-table th:nth-child(1), /* Cliente (antes era 2) */
 .payments-table td:nth-child(1) {
-  width: 8%; /* Más pequeño */
-  min-width: 70px;
-  white-space: nowrap;
+  width: 17%; /* Redistribuir el ancho */
+  min-width: 130px;
+  white-space: normal; 
 }
 
-.payments-table th:nth-child(2), /* Cliente */
+.payments-table th:nth-child(2), /* Barbero (antes era 3) */
 .payments-table td:nth-child(2) {
-  width: 15%;
-  min-width: 120px;
-  white-space: normal; /* Permitir ajuste */
-}
-
-.payments-table th:nth-child(3), /* Barbero */
-.payments-table td:nth-child(3) {
-  width: 15%;
-  min-width: 120px;
+  width: 17%;
+  min-width: 130px;
   white-space: normal;
 }
 
-.payments-table th:nth-child(4), /* Fecha Cita */
-.payments-table td:nth-child(4) {
-  width: 13%;
-  min-width: 130px; /* Espacio para fecha y hora */
+.payments-table th:nth-child(3), /* Fecha Cita (antes era 4) */
+.payments-table td:nth-child(3) {
+  width: 14%;
+  min-width: 130px;
   white-space: nowrap;
 }
 
-.payments-table th:nth-child(5), /* Servicios */
-.payments-table td:nth-child(5).services-cell { /* services-cell viene de tu JSX */
-  width: 20%; /* Más espacio para servicios */
+.payments-table th:nth-child(4), /* Servicios (antes era 5) */
+.payments-table td:nth-child(4).services-cell { 
+  width: 20%; 
   min-width: 180px;
-  white-space: normal; /* Permitir que se ajuste en múltiples líneas */
-  word-break: break-word; /* Romper palabras largas si es necesario */
+  white-space: normal; 
+  word-break: break-word; 
 }
 
-.payments-table th:nth-child(6), /* Monto */
-.payments-table td:nth-child(6) {
-  width: 8%;
-  min-width: 80px;
-  text-align: right; /* Alinea montos a la derecha */
+.payments-table th:nth-child(5), /* Monto (antes era 6) */
+.payments-table td:nth-child(5) {
+  width: 9%;
+  min-width: 90px;
+  text-align: right; 
   white-space: nowrap;
 }
 
-.payments-table th:nth-child(7), /* Método */
-.payments-table td:nth-child(7) {
-  width: 8%;
+.payments-table th:nth-child(6), /* Método (antes era 7) */
+.payments-table td:nth-child(6) {
+  width: 9%;
   min-width: 90px;
   white-space: nowrap;
 }
 
-.payments-table th:nth-child(8), /* Estado */
-.payments-table td:nth-child(8) {
-  width: 8%;
-  min-width: 100px; /* Para el badge */
-  text-align: center; /* Centrar el badge */
+.payments-table th:nth-child(7), /* Estado (antes era 8) */
+.payments-table td:nth-child(7) {
+  width: 9%;
+  min-width: 100px; 
+  text-align: center; 
 }
 
-.payments-table th:nth-child(9), /* Confirmado */
-.payments-table td:nth-child(9) {
-  width: 10%;
-  min-width: 120px; /* Espacio para fecha y hora */
+.payments-table th:nth-child(8), /* Confirmado (antes era 9) */
+.payments-table td:nth-child(8) {
+  width: 11%;
+  min-width: 120px; 
   white-space: nowrap;
 }
 
-.payments-table th:nth-child(10), /* Factura */
-.payments-table td:nth-child(10) {
-  width: 8%; /* O el ancho que necesites para el botón */
+.payments-table th:nth-child(9), /* Factura (antes era 10) */
+.payments-table td:nth-child(9) {
+  width: 10%; 
   min-width: 100px;
-  text-align: center; /* Centrar el botón o guion */
+  text-align: center; 
 }
-
 
 /* Badges de Estado (sin cambios, ya estaban bien) */
 .payment-status-badge {
@@ -315,4 +306,42 @@
     white-space: nowrap;
   }
   */
+}
+
+/* Estilo para el botón de Refrescar */
+.refresh-button {
+  padding: 10px 15px;
+  background-color: var(--color-primary, #007bff); /* O un color secundario */
+  color: var(--color-text-on-primary, white);
+  border: none;
+  border-radius: 6px;
+  font-size: 0.95em;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  margin-left: auto; /* Para empujarlo a la derecha si hay espacio */
+}
+
+.refresh-button:hover {
+  background-color: var(--color-primary-hover, #0056b3); /* O el hover del color secundario */
+}
+
+/* Asegúrate que los estilos de .filters-container manejen bien el espacio si hay muchos elementos */
+.filters-container {
+  display: flex;
+  flex-wrap: wrap; /* Permitir que los filtros pasen a la siguiente línea si no caben */
+  gap: 15px;
+  margin-bottom: 25px;
+  align-items: center;
+  padding: 15px;
+  background-color: var(--color-background, #f8f9fa);
+  border-radius: 8px;
+}
+
+/* Ajustes para el badge si el texto es "Facturada" */
+.payment-status-paid { /* Ya lo tienes, para el estado "Facturada" (antes "Pagado") */
+  background-color: #28a745; /* Verde */
+}
+.payment-status-pending { /* Ya lo tienes, para "Pendiente" (de factura) */
+  background-color: #ffc107; /* Amarillo */
+  color: #333; 
 }
