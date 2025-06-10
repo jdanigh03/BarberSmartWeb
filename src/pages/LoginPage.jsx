@@ -1,30 +1,9 @@
-import React, { useState, useEffect } from 'react'; // Import useEffect
+import React, { useState, useEffect } from 'react'; 
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import ReCAPTCHA from 'react-google-recaptcha'; // Importar ReCAPTCHA
 import logo from '../assets/barbersmart video.mp4';
 import './LoginPage.css';
-
-// Componente para el Modal de Mensaje
-const MessageModal = ({ message, type, onClose }) => {
-  // Use useEffect to automatically close the modal after a few seconds
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      onClose(); // Call the onClose function passed from parent
-    }, 3000); // Disappear after 3 seconds (3000 milliseconds)
-
-    // Clean up the timer if the component unmounts before the timer finishes
-    return () => clearTimeout(timer);
-  }, [onClose]); // Re-run effect if onClose changes (though it's stable here)
-
-  return (
-    <div className="login-modal-backdrop"> {/* Removed onClick={onClose} to prevent early closing */}
-      <div className={`login-message-modal login-modal-${type}`}>
-        <p>{message}</p>
-        {/* Removed the close button */}
-      </div>
-    </div>
-  );
-};
 
 const LoginPage = () => {
   const [email, setEmail] = useState('');
@@ -32,7 +11,9 @@ const LoginPage = () => {
   const [showModal, setShowModal] = useState(false);
   const [modalMessage, setModalMessage] = useState('');
   const [modalType, setModalType] = useState('');
-
+  const [captchaToken, setCaptchaToken] = useState(null); // Nuevo estado para almacenar el token del captcha
+  const MAX_ATTEMPTS = 3;
+  const [attempts, setAttempts] = useState(0); 
   const navigate = useNavigate();
 
   const handleShowModal = (message, type) => {
@@ -49,24 +30,38 @@ const LoginPage = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    if (attempts >= MAX_ATTEMPTS) {
+      handleShowModal('Has superado el número máximo de intentos. Intenta más tarde.', 'error');
+      return;
+    }
+
+    if (!captchaToken) {
+      handleShowModal('Por favor, verifica el CAPTCHA.', 'error');
+      return;
+    }
+
     try {
       const response = await axios.post('http://localhost:3001/api/login', {
         email,
         password,
+        recaptchaToken: captchaToken // Enviar el token del CAPTCHA al backend
       });
 
       if (response.data.success) {
         localStorage.setItem('user', JSON.stringify(response.data.user));
         handleShowModal('INICIO DE SESIÓN EXITOSO', 'success');
-        // Delay navigation until *after* the modal has time to show and then disappear
+        setAttempts(0); 
         setTimeout(() => {
           navigate('/admin/dashboard');
-        }, 3500); // 3 seconds for modal + 0.5s buffer
+        }, 3500); 
       } else {
+        setAttempts(attempts + 1); 
         handleShowModal('CREDENCIALES INCORRECTAS', 'error');
       }
     } catch (error) {
       console.error('Error en login:', error);
+      setAttempts(attempts + 1); 
       handleShowModal('CORREO O CONTRASEÑA INCORRECTOS', 'error');
     }
   };
@@ -75,18 +70,15 @@ const LoginPage = () => {
     navigate('/registrarse');
   };
 
+  const onCaptchaChange = (token) => {
+    setCaptchaToken(token); // Capturar el token generado por reCAPTCHA
+  };
+
   return (
     <div className="login-page">
       <div className="login-container">
         <div className="login-logo-container">
-          <video
-            src={logo}
-            className="login-logo"
-            autoPlay
-            loop
-            muted
-            playsInline
-          />
+          <video src={logo} className="login-logo" autoPlay loop muted playsInline />
         </div>
         <h1>Acceso Administrador</h1>
         <p>BarberSmart</p>
@@ -111,6 +103,13 @@ const LoginPage = () => {
               required
             />
           </div>
+
+          {/* Aquí añadimos el widget de reCAPTCHA */}
+          <ReCAPTCHA
+            sitekey="6LesVVsrAAAAABv7R963HbNmh-0DihtbeSObHX8t" // Aquí va tu clave pública de Google reCAPTCHA
+            onChange={onCaptchaChange}
+          />
+
           <button type="submit" className="login-button">Ingresar</button>
         </form>
 
@@ -123,7 +122,7 @@ const LoginPage = () => {
         <MessageModal
           message={modalMessage}
           type={modalType}
-          onClose={handleCloseModal} // Pass the close handler
+          onClose={handleCloseModal}
         />
       )}
     </div>
