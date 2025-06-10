@@ -37,8 +37,14 @@ const LoginPage = () => {
 
   const navigate = useNavigate();
 
+  // **CAMBIO:** useEffect ahora refresca el código cada 10 segundos.
   useEffect(() => {
-    generateRandomNumber();
+    generateRandomNumber(); // Genera el código inicial
+    const intervalId = setInterval(() => {
+      generateRandomNumber();
+    }, 10000); // 10000 ms = 10 segundos
+
+    return () => clearInterval(intervalId); // Limpia el intervalo al desmontar el componente
   }, []);
 
   // Genera un número aleatorio de 6 dígitos para el captcha
@@ -64,11 +70,8 @@ const LoginPage = () => {
   const handleLoginSubmit = async (e) => {
     e.preventDefault();
 
-    // Verificar si el campo de captcha está vacío
-    if (!captchaInput) {
-      alert('Por favor, llena el código de seguridad'); // Alerta si el captcha está vacío
-      return; // Detiene la ejecución
-    }
+    // **CAMBIO:** La validación del campo vacío ahora la maneja el propio input con `required` y `onInvalid`.
+    // El bloque `if (!captchaInput)` se ha eliminado.
 
     // Verificar si se superaron los intentos
     if (attempts >= maxAttempts) {
@@ -163,17 +166,23 @@ const LoginPage = () => {
           <div className="captcha-group">
             <div className="captcha-display">
               <span>{randomNumber}</span>
+              {/* **CAMBIO:** Botón de texto reemplazado por un icono de refresco. */}
               <button
                 type="button"
                 className="refresh-captcha-button"
+                title="Generar Nuevo"
                 onClick={() => {
                   generateRandomNumber();
                   setCaptchaInput('');
                 }}
               >
-                Generar Nuevo
+                <svg xmlns="http://www.w3.org/2000/svg" height="20" viewBox="0 0 24 24" width="20" fill="currentColor">
+                  <path d="M0 0h24v24H0z" fill="none"/>
+                  <path d="M17.65 6.35C16.2 4.9 14.21 4 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08c-.82 2.33-3.04 4-5.65 4-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"/>
+                </svg>
               </button>
             </div>
+            {/* **CAMBIO:** Se agregó onInvalid y onInput para el mensaje de validación personalizado. */}
             <input
               type="text"
               placeholder="Escribe el número"
@@ -181,6 +190,8 @@ const LoginPage = () => {
               value={captchaInput}
               onChange={(e) => setCaptchaInput(e.target.value)}
               required
+              onInvalid={e => e.target.setCustomValidity('Llena el código de verificación, por favor.')}
+              onInput={e => e.target.setCustomValidity('')}
             />
           </div>
 
